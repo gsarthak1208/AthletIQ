@@ -1,0 +1,104 @@
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  // Normalise an email so "Alex@Mail.com " and "alex@mail.com" are the same account.
+  function keyOf(email) { return email.trim().toLowerCase(); }
+
+  /* ------------------------------------------------------------------
+     STORAGE LAYER
+     Only these two functions touch storage. For a real backend, replace
+     the bodies with fetch() calls, e.g.:
+       get: fetch('/api/accounts/' + encodeURIComponent(k)).then(...)
+       set: fetch('/api/accounts', { method: 'POST', body: JSON.stringify(...) })
+  ------------------------------------------------------------------- */
+  var store = {
+    get: async function (k) {
+      var raw = localStorage.getItem('athletiq:' + k);
+      return raw ? JSON.parse(raw) : null;
+    },
+    set: async function (k, value) {
+      localStorage.setItem('athletiq:' + k, JSON.stringify(value));
+    }
+  };
+
+  /* ---------- tabs ---------- */
+  function showTab(which) {
+    var create = which === 'create';
+    $('panel-create').hidden = !create;
+    $('panel-check').hidden = create;
+    $('tab-create').setAttribute('aria-selected', create);
+    $('tab-check').setAttribute('aria-selected', !create);
+  }
+  $('tab-create').onclick = function () { showTab('create'); };
+  $('tab-check').onclick = function () { showTab('check'); };
+
+  function showMsg(el, kind, text) {
+    el.className = 'msg ' + kind;
+    el.textContent = text;
+    el.hidden = false;
+  }
+
+  /* ---------- create account ---------- */
+  $('create-btn').onclick = async function () {
+    ['e-name', 'e-email', 'e-pw', 'e-pw2'].forEach(function (i) { $(i).textContent = ''; });
+    $('create-msg').hidden = true;
+
+    var name = $('name').value.trim();
+    var email = $('email').value.trim();
+    var pw = $('pw').value;
+    var pw2 = $('pw2').value;
+    var valid = true;
+
+    if (name.length < 2) { $('e-name').textContent = 'Please enter your name.'; valid = false; }
+    if (!EMAIL_RE.test(email)) { $('e-email').textContent = 'Enter a valid email address.'; valid = false; }
+    if (pw.length < 8) { $('e-pw').textContent = 'Use at least 8 characters.'; valid = false; }
+    if (pw !== pw2) { $('e-pw2').textContent = 'Passwords don’t match.'; valid = false; }
+    if (!valid) return;
+
+    var btn = $('create-btn');
+    btn.disabled = true; btn.textContent = 'Creating…';
+    try {
+      var key = keyOf(email);
+      var existing = await store.get(key);
+      if (existing) {
+        showMsg($('create-msg'), 'bad', 'An account with this email already exists.');
+      } else {
+        // NOTE: never store plain-text passwords. Send it to your backend,
+        // which should hash it (bcrypt/argon2). It is not saved here.
+        await store.set(key, { name: name, role: $('role').value, createdAt: new Date().toISOString() });
+        showMsg($('create-msg'), 'ok', 'Account created for ' + email + '. Welcome, ' + name.split(' ')[0] + '!');
+        $('name').value = $('email').value = $('pw').value = $('pw2').value = '';
+      }
+    } catch (e) {
+      showMsg($('create-msg'), 'info', 'Couldn’t save the account. Please try again.');
+    }
+    btn.disabled = false; btn.textContent = 'Create account';
+  };
+
+  /* ---------- check account ---------- */
+  $('check-btn').onclick = async function () {
+    $('e-check').textContent = '';
+    $('check-msg').hidden = true;
+    var email = $('check-email').value.trim();
+    if (!EMAIL_RE.test(email)) { $('e-check').textContent = 'Enter a valid email address.'; return; }
+
+    var btn = $('check-btn');
+    btn.disabled = true; btn.textContent = 'Checking…';
+    try {
+      var acct = await store.get(keyOf(email));
+      if (acct) {
+        var roles = { player: 'player', coach: 'coach', agency: 'sports agency' };
+        showMsg($('check-msg'), 'ok', 'Yes, an account exists for ' + email + ' (registered as a ' + (roles[acct.role] || 'member') + ').');
+      } else {
+        showMsg($('check-msg'), 'info', 'No account found for ' + email + '. You can create one in the first tab.');
+      }
+    } catch (e) {
+      showMsg($('check-msg'), 'bad', 'Couldn’t run the check. Please try again.');
+    }
+    btn.disabled = false; btn.textContent = 'Check';
+  };
+  $('check-email').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') $('check-btn').click();
+  });
+})();

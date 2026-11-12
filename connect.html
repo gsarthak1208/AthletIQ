@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AthletIQ – Connect with people</title>
+  <link rel="stylesheet" href="connect.css">
+</head>
+<body>
+  <div class="wrap">
+    <h1>Athlet<span>IQ</span></h1>
+    <p class="sub"><a href="home.html">← Back to home</a></p>
+
+    <!-- Search box -->
+    <div class="card">
+      <h2>Connect with people</h2>
+      <label for="search">Search by email</label>
+      <input id="search" type="search" placeholder="Type an email, e.g. alex@gmail.com">
+    </div>
+
+    <!-- Search results (only shown when something is typed) -->
+    <div id="results-section" hidden>
+      <h2 class="section-title">Search results</h2>
+      <div id="results"></div>
+    </div>
+
+    <!-- Recommended people -->
+    <h2 class="section-title">People you may know</h2>
+    <div id="recommended"></div>
+  </div>
+
+  <script src="connect.js"></script>
+</body>
+</html>

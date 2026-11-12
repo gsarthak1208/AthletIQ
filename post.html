@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AthletIQ – Add post</title>
+  <link rel="stylesheet" href="post.css">
+</head>
+<body>
+  <div class="wrap">
+    <h1>Athlet<span>IQ</span></h1>
+    <p class="sub"><a href="home.html">← Back to home</a></p>
+
+    <!-- The form where the user writes a post -->
+    <div class="card">
+      <h2>Add a post</h2>
+
+      <label for="sport">Sport (optional)</label>
+      <input id="sport" placeholder="Cricket, Football, Tennis…">
+
+      <label for="text">What do you want to share?</label>
+      <textarea id="text" rows="4" maxlength="500" placeholder="Write your post here…"></textarea>
+      <div class="err" id="e-text"></div>
+
+      <label for="media">Photo or video (optional)</label>
+      <input id="media" type="file" accept="image/*,video/*">
+      <div id="preview"></div>
+      <div class="err" id="e-media"></div>
+
+      <button class="btn" id="post-btn">Post</button>
+      <div class="msg" id="post-msg" hidden></div>
+    </div>
+
+    <!-- All posts are shown here -->
+    <h2 class="feed-title">Latest posts</h2>
+    <div id="feed"></div>
+  </div>
+
+  <script src="post.js"></script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+/* ===== SIMPLE CSS FOR ATHLETIQ =====
+   How CSS works:  selector { property: value; }
+   - selector = WHAT to style (a tag like body, a class like .card, an id like #name)
+   - property = WHAT to change (color, padding, ...)
+   - value    = HOW to change it
+*/
+
+/* 1. Make width/padding behave the way you expect, for every element */
+* {
+  box-sizing: border-box;
+}
+
+/* 2. The whole page */
+body {
+  background-color: #f2f4f7;   /* light grey background */
+  color: #222222;              /* dark grey text */
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  margin: 0;                   /* remove the default space around the page */
+}
+
+/* 3. The box that holds everything. It sits in the middle of the page */
+.wrap {
+  max-width: 450px;            /* never wider than 450px */
+  margin: 0 auto;              /* "auto" on left/right = centered */
+  padding: 20px;               /* space inside the box */
+}
+
+/* 4. Title "AthletIQ" */
+h1 {
+  font-size: 28px;
+  margin-bottom: 4px;
+}
+
+h1 span {
+  color: rgb(48, 144, 48);              /* only the "IQ" part is blue */
+}
+
+/* 5. The small grey line under the title */
+.sub {
+  color: #666666;
+  margin-bottom: 20px;
+}
+
+/* 6. The two tab buttons: "Create account" and "Check account" */
+.tabs {
+  display: flex;               /* puts the buttons side by side */
+  gap: 6px;                    /* space between them */
+  margin-bottom: 16px;
+}
+
+.tabs button {
+  flex: 1;                     /* both buttons share the width equally */
+  padding: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 8px;          /* rounded corners */
+  background-color: white;
+  color: #666666;
+  font-size: 14px;
+  cursor: pointer;             /* hand icon when you hover */
+}
+
+/* The tab that is currently selected */
+.tabs button[aria-selected="true"] {
+  background-color: rgb(48, 144, 48);
+  border-color: rgb(48, 144, 48);
+  color: white;
+}
+
+/* 7. The white form box */
+.card {
+  background-color: white;
+  border: 1px solid #dddddd;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+/* 8. Labels (the text above each input) */
+label {
+  display: block;              /* each label gets its own line */
+  font-weight: bold;
+  font-size: 14px;
+  margin-top: 14px;
+  margin-bottom: 6px;
+}
+
+/* 9. Input boxes and the dropdown */
+input,
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+/* When you click inside an input, show a blue border */
+input:focus,
+select:focus {
+  outline: none;
+  border-color: rgb(48, 144, 48);
+}
+
+/* 10. Red error text under an input */
+.err {
+  color: #c62828;
+  font-size: 13px;
+  min-height: 18px;            /* keeps space so the layout doesn't jump */
+  margin-top: 4px;
+}
+
+/* 11. The big blue buttons */
+.btn {
+  width: 100%;
+  margin-top: 18px;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: rgb(48, 144, 48);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Button looks faded while it is working */
+.btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* 12. Result messages (shown after you click a button) */
+.msg {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.msg.ok {                      /* green = success */
+  background-color: #e3f6e8;
+  color: #1b6b35;
+}
+
+.msg.bad {                     /* red = error */
+  background-color: #fdeaea;
+  color: #b3261e;
+}
+
+.msg.info {                    /* yellow = notice */
+  background-color: #fff4d6;
+  color: #7a5200;
+}
+
+/* 13. Small grey note at the bottom */
+.hint {
+  font-size: 13px;
+  color: #777777;
+  margin-top: 14px;
+}
+
+/* 14. IMPORTANT: this hides anything with the "hidden" attribute.
+   The tabs and messages rely on it, so keep it. */
+[hidden] {
+  display: none !important;
+}
+
+/* 15. Welcome box shown after signing in */
+#panel-welcome h2 {
+  margin-top: 0;
+}
+
+#oo
+{
+  color: #1b6b35;
+  
+}
+#hh
+{
+    margin-left : 90px;
+}
