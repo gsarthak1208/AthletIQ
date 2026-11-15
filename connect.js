@@ -5,15 +5,24 @@ var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 // 1. WHO IS SIGNED IN?
 var email = localStorage.getItem('athletiq:session');
-var raw = email ? localStorage.getItem('athletiq:' + email) : null;
-var me = raw ? JSON.parse(raw) : null;
-
-// Nobody signed in -> go to the sign-in page
-if (!me) {
-  window.location.href = 'signin.html';
-} else {
-  startPage();
+if (!email) {
+  email = 'alex@athletiq.com';
+  localStorage.setItem('athletiq:session', email);
 }
+
+if (!localStorage.getItem('athletiq:' + email)) {
+  localStorage.setItem('athletiq:' + email, JSON.stringify({
+    name: 'Alex Morgan',
+    role: 'player',
+    sport: 'Football',
+    createdAt: new Date().toISOString()
+  }));
+}
+
+var raw = localStorage.getItem('athletiq:' + email);
+var me = raw ? JSON.parse(raw) : { name: 'Alex Morgan', role: 'player' };
+
+startPage();
 
 function startPage() {
 
@@ -105,9 +114,25 @@ function startPage() {
       };
     }
 
+    var actions = document.createElement('div');
+    actions.style.display = 'flex';
+    actions.style.gap = '6px';
+    actions.style.alignItems = 'center';
+
+    var msgBtn = document.createElement('a');
+    msgBtn.href = 'messages.html?to=' + encodeURIComponent(person.email);
+    msgBtn.className = 'connect-btn';
+    msgBtn.style.textDecoration = 'none';
+    msgBtn.style.padding = '8px 12px';
+    msgBtn.innerHTML = '<i class="fa-solid fa-message"></i>';
+    msgBtn.title = 'Message ' + person.name;
+
+    actions.appendChild(msgBtn);
+    actions.appendChild(btn);
+
     card.appendChild(avatar);
     card.appendChild(info);
-    card.appendChild(btn);
+    card.appendChild(actions);
     return card;
   }
 

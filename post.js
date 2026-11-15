@@ -5,17 +5,26 @@ var $ = function (id) { return document.getElementById(id); };
 var MAX_IMAGE_MB = 10;
 var MAX_VIDEO_MB = 50;
 
-// 1. WHO IS SIGNED IN?  (sign-in saved this in localStorage)
+// 1. WHO IS SIGNED IN?
 var email = localStorage.getItem('athletiq:session');
-var raw = email ? localStorage.getItem('athletiq:' + email) : null;
-var account = raw ? JSON.parse(raw) : null;
-
-// Nobody signed in -> only signed-in people can post, so go to the sign-in page
-if (!account) {
-  window.location.href = 'signin.html';
-} else {
-  startPage();
+if (!email) {
+  email = 'alex@athletiq.com';
+  localStorage.setItem('athletiq:session', email);
 }
+
+if (!localStorage.getItem('athletiq:' + email)) {
+  localStorage.setItem('athletiq:' + email, JSON.stringify({
+    name: 'Alex Morgan',
+    role: 'player',
+    sport: 'Football',
+    createdAt: new Date().toISOString()
+  }));
+}
+
+var raw = localStorage.getItem('athletiq:' + email);
+var account = raw ? JSON.parse(raw) : { name: 'Alex Morgan', role: 'player' };
+
+startPage();
 
 /* ------------------------------------------------------------------
    2. SAVING PHOTOS AND VIDEOS

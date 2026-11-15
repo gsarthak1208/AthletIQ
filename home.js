@@ -1,13 +1,82 @@
-// --- Authentication Check ---
-const sessionEmail = localStorage.getItem("athletiq:session");
-const rawAccount = sessionEmail ? localStorage.getItem("athletiq:" + sessionEmail) : null;
-const currentAccount = rawAccount ? JSON.parse(rawAccount) : null;
-
-if (!currentAccount) {
-    window.location.href = "signin.html";
-} else {
-    initHomePage();
+// --- Authentication & Preview Check ---
+// If you preview home.html without signing in first, a demo account is auto-loaded
+// so you can see and test your home page immediately!
+let sessionEmail = localStorage.getItem("athletiq:session");
+if (!sessionEmail) {
+    sessionEmail = "alex@athletiq.com";
+    localStorage.setItem("athletiq:session", sessionEmail);
 }
+
+// Ensure demo user exists
+if (!localStorage.getItem("athletiq:" + sessionEmail)) {
+    localStorage.setItem("athletiq:" + sessionEmail, JSON.stringify({
+        name: "Alex Morgan",
+        role: "player",
+        sport: "Football",
+        location: "Los Angeles, USA",
+        team: "AthletIQ FC",
+        experience: "Professional",
+        bio: "Passionate football striker exploring opportunities, matches, and coach connections on AthletIQ.",
+        createdAt: new Date().toISOString()
+    }));
+}
+
+// Seed sample community posts if feed is empty
+if (!localStorage.getItem("athletiq:posts")) {
+    localStorage.setItem("athletiq:posts", JSON.stringify([
+        {
+            id: 1001,
+            email: "marcus@athletiq.com",
+            author: "Marcus Vance",
+            role: "player",
+            sport: "Football",
+            text: "Great training session today! Focusing on agility drills and quick sprint transitions. Looking forward to our tournament next weekend! ⚽🔥",
+            mediaType: "",
+            createdAt: new Date(Date.now() - 3600000 * 4).toISOString()
+        },
+        {
+            id: 1002,
+            email: "coach.davis@athletiq.com",
+            author: "Coach Davis",
+            role: "coach",
+            sport: "Basketball",
+            text: "Open basketball trials and high-performance development clinics are starting this Thursday. Open to all aspiring college players! Send me a message if interested. 🏀🏆",
+            mediaType: "",
+            createdAt: new Date(Date.now() - 3600000 * 2).toISOString()
+        }
+    ]));
+}
+
+// Seed sample users for Connect and Messages if needed
+if (!localStorage.getItem("athletiq:marcus@athletiq.com")) {
+    localStorage.setItem("athletiq:marcus@athletiq.com", JSON.stringify({
+        name: "Marcus Vance",
+        role: "player",
+        sport: "Football",
+        location: "London, UK",
+        team: "North FC",
+        experience: "Semi-Pro",
+        bio: "Speedy winger looking for club opportunities.",
+        createdAt: new Date().toISOString()
+    }));
+}
+if (!localStorage.getItem("athletiq:coach.davis@athletiq.com")) {
+    localStorage.setItem("athletiq:coach.davis@athletiq.com", JSON.stringify({
+        name: "Coach Davis",
+        role: "coach",
+        sport: "Basketball",
+        location: "Chicago, USA",
+        team: "Windy City Academy",
+        experience: "12 years coaching",
+        bio: "Head coach helping youth athletes reach collegiate levels.",
+        createdAt: new Date().toISOString()
+    }));
+}
+
+const rawAccount = localStorage.getItem("athletiq:" + sessionEmail);
+const currentAccount = rawAccount ? JSON.parse(rawAccount) : { name: "Alex Morgan", role: "player" };
+
+initHomePage();
 
 function initHomePage() {
     // --- Elements ---

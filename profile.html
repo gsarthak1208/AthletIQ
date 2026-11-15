@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AthletIQ – My Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.css"
+          integrity="sha512-Z0kTB03S7BU+JFU0nw9mjSBcRnZm2Bvm0tzOX9/OuOuz01XQfOpa0w/N9u6Jf2f1OAdegdIPWZ9nIZZ+keEvBw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+
+<header>
+    <div class="nav">
+        <div id="logo"><a href="home.html" style="text-decoration:none; color:inherit;">AthletIQ</a></div>
+
+        <div class="nav-links-wrap">
+            <a href="home.html" class="nav-link">
+                <span class="icon"><i class="fa-solid fa-house"></i></span>
+                Home
+            </a>
+
+            <a href="profile.html" class="nav-link active">
+                <span class="icon"><i class="fa-solid fa-user"></i></span>
+                My Profile
+            </a>
+
+            <a href="connect.html" class="nav-link">
+                <span class="icon"><i class="fa-solid fa-users"></i></span>
+                Connect
+            </a>
+
+            <a href="post.html" class="nav-link">
+                <span class="icon"><i class="fa-solid fa-plus"></i></span>
+                Post
+            </a>
+
+            <a href="messages.html" class="nav-link">
+                <span class="icon"><i class="fa-solid fa-message"></i></span>
+                Messages
+            </a>
+
+            <a href="notification.html" class="nav-link">
+                <span class="icon"><i class="fa-solid fa-bell"></i></span>
+                Notification <span id="notif-count" class="badge" hidden>0</span>
+            </a>
+
+            <div class="divider"></div>
+
+            <div class="settings-container">
+                <a href="#" class="button" id="settingsBtn">
+                    <span class="icon"><i class="fa-solid fa-gear"></i></span>
+                    Settings
+                </a>
+                <div class="settings-dropdown" id="settingsDropdown">
+                    <div class="dropdown-title">Settings</div>
+                    <div class="dropdown-item">
+                        <span><i class="fa-solid fa-moon"></i> Dark Mode</span>
+                        <label class="switch">
+                            <input type="checkbox" id="darkModeToggle">
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
+                    <hr>
+                    <div class="dropdown-item sign-out" id="signOut">
+                        <span><i class="fa-solid fa-right-from-bracket"></i> Sign Out</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="profile-container">
+    <!-- Profile Header Card -->
+    <section class="profile-header-card">
+        <div class="profile-cover"></div>
+        <div class="profile-avatar-row">
+            <div class="profile-avatar" id="profAvatar">A</div>
+            <button class="btn-edit-profile" id="btnEditProfile">
+                <i class="fa-solid fa-pen"></i> Edit Profile
+            </button>
+        </div>
+        <div class="profile-main-info">
+            <h1 class="profile-name" id="profName">Athlete Name</h1>
+            <div class="profile-badges">
+                <span class="badge-role" id="profRole">Player</span>
+                <span class="badge-sport" id="profSport">All Sports</span>
+                <span class="badge-location" id="profLocation"><i class="fa-solid fa-location-dot"></i> Worldwide</span>
+            </div>
+            <p class="profile-bio" id="profBio">No bio added yet. Click "Edit Profile" to tell the sports community about yourself!</p>
+        </div>
+
+        <div class="profile-stats-row">
+            <div class="stat-box">
+                <div class="stat-number" id="statPostsCount">0</div>
+                <div class="stat-label">Posts</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="statConnectionsCount">0</div>
+                <div class="stat-label">Connections</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="statMemberSince">2026</div>
+                <div class="stat-label">Joined</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Additional Details & My Posts Grid -->
+    <div class="profile-content-grid">
+        <!-- Left: Details & Contact -->
+        <aside class="profile-sidebar">
+            <div class="card detail-card">
+                <h3>About & Details</h3>
+                <div class="detail-row">
+                    <span class="detail-label"><i class="fa-solid fa-envelope"></i> Email</span>
+                    <span class="detail-val" id="profEmail">user@example.com</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label"><i class="fa-solid fa-shield-halved"></i> Team / Club</span>
+                    <span class="detail-val" id="profTeam">Free Agent</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label"><i class="fa-solid fa-trophy"></i> Experience</span>
+                    <span class="detail-val" id="profExp">Amateur</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Right: My Posts -->
+        <section class="profile-posts-col">
+            <div class="feed-header">
+                <h3>My Posts</h3>
+                <a href="post.html" class="feed-create-link">+ New Post</a>
+            </div>
+            <div id="myPostsList" class="my-posts-list">
+                <!-- Populated dynamically -->
+            </div>
+        </section>
+    </div>
+</main>
+
+<!-- Edit Profile Modal -->
+<div class="modal-overlay" id="editModal" hidden>
+    <div class="modal-card">
+        <div class="modal-header">
+            <h2>Edit Profile</h2>
+            <button class="modal-close-btn" id="closeModalBtn">&times;</button>
+        </div>
+        <div class="modal-body">
+            <label for="editName">Full Name</label>
+            <input id="editName" type="text" placeholder="Alex Morgan">
+
+            <label for="editRole">Role</label>
+            <select id="editRole">
+                <option value="player">Player</option>
+                <option value="coach">Coach</option>
+                <option value="agency">Sports Agency</option>
+            </select>
+
+            <label for="editSport">Primary Sport</label>
+            <input id="editSport" type="text" placeholder="e.g. Football, Basketball, Tennis">
+
+            <label for="editLocation">Location / City</label>
+            <input id="editLocation" type="text" placeholder="e.g. Madrid, Spain">
+
+            <label for="editTeam">Current Team / Club</label>
+            <input id="editTeam" type="text" placeholder="e.g. FC Barcelona Academy or Independent">
+
+            <label for="editExp">Experience / Level</label>
+            <input id="editExp" type="text" placeholder="e.g. 5 years competitive / Semi-pro">
+
+            <label for="editBio">Bio / Summary</label>
+            <textarea id="editBio" rows="3" placeholder="Tell coaches, scouts, and players about your journey..."></textarea>
+
+            <button class="btn btn-save" id="btnSaveProfile">Save Changes</button>
+            <div class="msg" id="editMsg" hidden></div>
+        </div>
+    </div>
+</div>
+
+<script src="api.js"></script>
+<script src="connection.js"></script>
+<script src="profile.js"></script>
+</body>
+</html>

@@ -77,6 +77,20 @@
         showMsg($('create-msg'), 'bad', 'An account with this email already exists.');
       } else {
         var passwordHash = await hashPassword(email, pw);
+
+        // Sync with backend database if running
+        if (window.AthletIQ_API) {
+          try {
+            await window.AthletIQ_API.register(name, email, $('role').value, pw);
+          } catch (apiErr) {
+            if (apiErr.message && apiErr.message.toLowerCase().includes('already exists')) {
+              showMsg($('create-msg'), 'bad', apiErr.message);
+              btn.disabled = false; btn.textContent = 'Create account';
+              return;
+            }
+          }
+        }
+
         await store.set(key, {
           name: name,
           role: $('role').value,
