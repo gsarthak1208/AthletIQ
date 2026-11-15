@@ -17,83 +17,93 @@
 
 <header>
     <div class="nav">
-
         <div id="logo">AthletIQ</div>
 
-        <a href="#" class="nav-link" id="first-link">
-            <span class="icon"><i class="fa-solid fa-user"></i></span>
-            My Profile
-        </a>
-
-        <a href="connect.html" class="nav-link" id="second-link">
-            <span class="icon"><i class="fa-solid fa-users"></i></span>
-            Connect With People
-        </a>
-
-        <a href="post.html" class="nav-link" id="third-link">
-            <span class="icon"><i class="fa-solid fa-plus"></i></span>
-            Post
-        </a>
-
-        <a href="#" class="nav-link" id="fourth-link">
-            <span class="icon"><i class="fa-solid fa-message"></i></span>
-            Messages
-        </a>
-
-        <a href="notification.html" class="nav-link" id="fiveth-link">
-            <span class="icon"><i class="fa-solid fa-bell"></i></span>
-            Notification
-        </a>
-
-        <div class="divider"></div>
-
-        <!-- SETTINGS -->
-        <div class="settings-container">
-
-            <a href="#" class="button" id="settings">
-                <span class="icon">
-                    <i class="fa-solid fa-gear"></i>
-                </span>
-                Settings
+        <div class="nav-links-wrap">
+            <a href="home.html" class="nav-link" id="first-link">
+                <span class="icon"><i class="fa-solid fa-house"></i></span>
+                Home
             </a>
 
-            <!-- SETTINGS DROPDOWN -->
-            <div class="settings-dropdown" id="settingsDropdown">
+            <a href="connect.html" class="nav-link" id="second-link">
+                <span class="icon"><i class="fa-solid fa-users"></i></span>
+                Connect
+            </a>
 
-                <div class="dropdown-title">Settings</div>
+            <a href="post.html" class="nav-link" id="third-link">
+                <span class="icon"><i class="fa-solid fa-plus"></i></span>
+                Post
+            </a>
 
-                <div class="dropdown-item">
+            <a href="notification.html" class="nav-link" id="fiveth-link">
+                <span class="icon"><i class="fa-solid fa-bell"></i></span>
+                Notification <span id="notif-count" class="badge" hidden>0</span>
+            </a>
 
-                    <span>
-                        <i class="fa-solid fa-moon"></i>
-                        Dark Mode
+            <div class="divider"></div>
+
+            <!-- SETTINGS -->
+            <div class="settings-container">
+                <a href="#" class="button" id="settingsBtn">
+                    <span class="icon">
+                        <i class="fa-solid fa-gear"></i>
                     </span>
+                    Settings
+                </a>
 
-                    <label class="switch">
-                        <input type="checkbox" id="darkModeToggle">
-                        <span class="switch-slider"></span>
-                    </label>
-
+                <!-- SETTINGS DROPDOWN -->
+                <div class="settings-dropdown" id="settingsDropdown">
+                    <div class="dropdown-title">Settings</div>
+                    <div class="dropdown-item">
+                        <span>
+                            <i class="fa-solid fa-moon"></i>
+                            Dark Mode
+                        </span>
+                        <label class="switch">
+                            <input type="checkbox" id="darkModeToggle">
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
+                    <hr>
+                    <div class="dropdown-item sign-out" id="signOut">
+                        <span>
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            Sign Out
+                        </span>
+                    </div>
                 </div>
-
-                <hr>
-
-                <div class="dropdown-item sign-out" id="signOut">
-
-                    <span>
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                        Sign Out
-                    </span>
-
-                </div>
-
             </div>
-
         </div>
-
     </div>
 </header>
 
+<main class="home-main">
+    <!-- Welcome Profile Card -->
+    <section class="welcome-card">
+        <div class="welcome-left">
+            <div class="user-avatar" id="homeAvatar">A</div>
+            <div class="user-details">
+                <h2 id="homeWelcomeTitle">Welcome to AthletIQ!</h2>
+                <p id="homeWelcomeSub" class="sub-text">Connect with players, coaches, and sports agencies.</p>
+            </div>
+        </div>
+        <div class="quick-actions">
+            <a href="post.html" class="action-btn"><i class="fa-solid fa-plus"></i> Create Post</a>
+            <a href="connect.html" class="action-btn outline"><i class="fa-solid fa-user-plus"></i> Connect</a>
+        </div>
+    </section>
+
+    <!-- Community Feed -->
+    <section class="feed-section">
+        <div class="feed-header">
+            <h3>Community Feed</h3>
+            <a href="post.html" class="feed-create-link">+ New Post</a>
+        </div>
+        <div id="homeFeed" class="feed-list">
+            <!-- Dynamically populated by home.js -->
+        </div>
+    </section>
+</main>
 
 <footer>
 
@@ -129,6 +139,7 @@
 
 </footer>
 
+<script src="connection.js"></script>
 <script src="home.js"></script>
 
 </body>

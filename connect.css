@@ -238,3 +238,15 @@ select:focus {
   background-color: #0b6bff;
   color: white;
 }
+
+.connect-btn.requested {
+  background-color: #fff4d6;
+  border-color: #e0a800;
+  color: #7a5200;
+}
+
+.connect-btn.accept {
+  background-color: rgb(48, 144, 48);
+  border-color: rgb(48, 144, 48);
+  color: white;
+}

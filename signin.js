@@ -191,4 +191,27 @@
   });
   }
 
+  /* ---------- SIGN OUT & SESSION CHECK ---------- */
+  if ($('signout-btn')) {
+    $('signout-btn').onclick = function () {
+      localStorage.removeItem('athletiq:session');
+      location.reload();
+    };
+  }
+
+  var currentSession = localStorage.getItem('athletiq:session');
+  if (currentSession && $('panel-welcome') && $('welcome-title')) {
+    store.get(currentSession).then(function (acc) {
+      if (acc) {
+        if ($('panel-signin')) $('panel-signin').hidden = true;
+        if ($('panel-create')) $('panel-create').hidden = true;
+        if ($('panel-check')) $('panel-check').hidden = true;
+        if (document.querySelector('.tabs')) document.querySelector('.tabs').hidden = true;
+        $('panel-welcome').hidden = false;
+        $('welcome-title').textContent = 'Welcome back, ' + acc.name + '!';
+        $('welcome-text').innerHTML = 'You are already signed in as <strong>' + currentSession + '</strong>.<br><br><a href="home.html" class="btn" style="display:inline-block;text-align:center;text-decoration:none;margin-bottom:12px;">Go to Home</a>';
+      }
+    });
+  }
+
   })();

@@ -22,6 +22,18 @@
     }
   };
 
+  /* ------------------------------------------------------------------
+     PASSWORD HASH: Demo SHA-256 (matches signin.js)
+  ------------------------------------------------------------------- */
+  async function hashPassword(email, password) {
+    var text = keyOf(email) + ':' + password;
+    var bytes = new TextEncoder().encode(text);
+    var buffer = await crypto.subtle.digest('SHA-256', bytes);
+    return Array.from(new Uint8Array(buffer))
+      .map(function (b) { return b.toString(16).padStart(2, '0'); })
+      .join('');
+  }
+
   /* ---------- tabs ---------- */
   function showTab(which) {
     var create = which === 'create';
@@ -64,11 +76,18 @@
       if (existing) {
         showMsg($('create-msg'), 'bad', 'An account with this email already exists.');
       } else {
-        // NOTE: never store plain-text passwords. Send it to your backend,
-        // which should hash it (bcrypt/argon2). It is not saved here.
-        await store.set(key, { name: name, role: $('role').value, createdAt: new Date().toISOString() });
-        showMsg($('create-msg'), 'ok', 'Account created for ' + email + '. Welcome, ' + name.split(' ')[0] + '!');
+        var passwordHash = await hashPassword(email, pw);
+        await store.set(key, {
+          name: name,
+          role: $('role').value,
+          passwordHash: passwordHash,
+          createdAt: new Date().toISOString()
+        });
+        showMsg($('create-msg'), 'ok', 'Account created! Welcome, ' + name.split(' ')[0] + '! You can now sign in.');
         $('name').value = $('email').value = $('pw').value = $('pw2').value = '';
+        setTimeout(function () {
+          window.location.href = 'signin.html';
+        }, 1500);
       }
     } catch (e) {
       showMsg($('create-msg'), 'info', 'Couldn’t save the account. Please try again.');

@@ -1,0 +1,135 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #f2f4f7;
+  color: #222222;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+}
+
+.wrap {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+h1 {
+  font-size: 28px;
+  margin-bottom: 4px;
+}
+
+h1 span {
+  color: rgb(244, 119, 61);
+}
+
+.sub {
+  color: #666666;
+  margin-bottom: 24px;
+  font-size: 14px;
+}
+
+.sub a {
+  color: rgb(244, 119, 61);
+  text-decoration: none;
+}
+
+.sub a:hover {
+  text-decoration: underline;
+}
+
+h2 {
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+
+.notif-item {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+}
+
+.notif-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: rgb(244, 119, 61);
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.notif-content {
+  flex: 1;
+}
+
+.notif-text {
+  font-size: 15px;
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+
+.notif-time {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 10px;
+}
+
+.notif-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-accept {
+  padding: 6px 14px;
+  background-color: rgb(48, 144, 48);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.btn-decline {
+  padding: 6px 14px;
+  background-color: #f1f3f5;
+  color: #555;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.btn-accepted-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  background-color: #e3f6e8;
+  color: #1b6b35;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+}
+
+.empty-state {
+  background: white;
+  border: 1px dashed #ccc;
+  border-radius: 12px;
+  padding: 36px 16px;
+  text-align: center;
+  color: #777;
+}

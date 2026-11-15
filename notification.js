@@ -1,25 +1,28 @@
 /* ==================================================================
-   NOTIFICATION POP-UP.
-   Add this file (after connections.js) to any page where you want
-   the pop-up, for example home.html and connect.html.
-   - Shows a pop-up when someone sends you a request or accepts yours.
-   - Fills in a number badge if the page has <span id="notif-count">.
+   NOTIFICATION POP-UP & NOTIFICATIONS PAGE MANAGER
 ================================================================== */
 (function () {
-  var me = localStorage.getItem('athletiq:session');     // who is signed in
-  if (!me || typeof Connections === 'undefined') return;  // nobody signed in: do nothing
+  var me = localStorage.getItem('athletiq:session');
+  if (!me) {
+    var listEl = document.getElementById('list');
+    if (listEl) {
+      window.location.href = 'signin.html';
+      return;
+    }
+  }
 
-  // Update the little number next to the "Notifications" link
+  if (typeof Connections === 'undefined') return;
+
+  // --- 1. POP-UP TOASTS & BADGE ---
   function updateBadge() {
     var badge = document.getElementById('notif-count');
-    if (!badge) return;
+    if (!badge || !me) return;
     var count = Connections.unreadCount(me);
     badge.textContent = count;
     badge.hidden = (count === 0);
   }
 
-  // The box in the top-right corner that holds pop-ups
-  function getBox() {
+  function getToastBox() {
     var box = document.getElementById('toast-box');
     if (!box) {
       box = document.createElement('div');
@@ -33,7 +36,6 @@
 
   function showToast(note) {
     var name = Connections.nameOf(note.from);
-
     var toast = document.createElement('div');
     toast.style.cssText = 'background:#14181f;color:#ffffff;padding:12px 14px;border-radius:10px;' +
       'font-family:Arial,sans-serif;font-size:14px;box-shadow:0 4px 14px rgba(0,0,0,0.25);';
@@ -44,9 +46,9 @@
       : name + ' accepted your connection request';
 
     var view = document.createElement('a');
-    view.href = 'notifications.html';
+    view.href = 'notification.html';
     view.textContent = 'View';
-    view.style.cssText = 'color:#7fb2ff;margin-right:14px;font-weight:bold;';
+    view.style.cssText = 'color:#f4773d;margin-right:14px;font-weight:bold;text-decoration:none;';
 
     var close = document.createElement('button');
     close.textContent = 'Dismiss';
@@ -60,13 +62,13 @@
 
     toast.appendChild(text);
     toast.appendChild(row);
-    getBox().appendChild(toast);
+    getToastBox().appendChild(toast);
 
-    setTimeout(function () { toast.remove(); }, 8000);    // disappears after 8 seconds
+    setTimeout(function () { toast.remove(); }, 8000);
   }
 
-  // Look for new notifications, pop each one up once
-  function check() {
+  function checkToasts() {
+    if (!me) return;
     Connections.newToasts(me).forEach(function (note) {
       showToast(note);
       Connections.markToasted(note.id);
@@ -74,6 +76,96 @@
     updateBadge();
   }
 
-  check();                                   // when the page opens
-  window.addEventListener('storage', check); // and when another tab saves something new
+  // --- 2. NOTIFICATIONS PAGE LIST RENDERING ---
+  function renderList() {
+    var list = document.getElementById('list');
+    if (!list || !me) return;
+
+    var notes = Connections.notesFor(me);
+    list.innerHTML = '';
+
+    if (notes.length === 0) {
+      list.innerHTML = '<div class="empty-state">No notifications yet.</div>';
+      return;
+    }
+
+    notes.forEach(function (note) {
+      var name = Connections.nameOf(note.from);
+      var status = Connections.statusWith(me, note.from);
+
+      var item = document.createElement('div');
+      item.className = 'notif-item';
+
+      var avatar = document.createElement('div');
+      avatar.className = 'notif-avatar';
+      avatar.textContent = name.charAt(0).toUpperCase();
+
+      var content = document.createElement('div');
+      content.className = 'notif-content';
+
+      var text = document.createElement('div');
+      text.className = 'notif-text';
+
+      var time = document.createElement('div');
+      time.className = 'notif-time';
+      time.textContent = new Date(note.createdAt).toLocaleString();
+
+      if (note.type === 'request') {
+        text.innerHTML = '<strong>' + name + '</strong> sent you a connection request.';
+        content.appendChild(text);
+        content.appendChild(time);
+
+        var actions = document.createElement('div');
+        actions.className = 'notif-actions';
+
+        if (status === 'received') {
+          var btnAccept = document.createElement('button');
+          btnAccept.className = 'btn-accept';
+          btnAccept.textContent = 'Accept';
+          btnAccept.onclick = function () {
+            Connections.acceptRequest(me, note.from);
+            renderList();
+          };
+
+          var btnDecline = document.createElement('button');
+          btnDecline.className = 'btn-decline';
+          btnDecline.textContent = 'Decline';
+          btnDecline.onclick = function () {
+            Connections.declineRequest(me, note.from);
+            renderList();
+          };
+
+          actions.appendChild(btnAccept);
+          actions.appendChild(btnDecline);
+        } else if (status === 'connected') {
+          var badge = document.createElement('span');
+          badge.className = 'btn-accepted-badge';
+          badge.textContent = 'Connected ✓';
+          actions.appendChild(badge);
+        }
+
+        content.appendChild(actions);
+      } else {
+        text.innerHTML = '<strong>' + name + '</strong> accepted your connection request.';
+        content.appendChild(text);
+        content.appendChild(time);
+      }
+
+      item.appendChild(avatar);
+      item.appendChild(content);
+      list.appendChild(item);
+    });
+
+    // Mark as read once opened
+    Connections.markAllRead(me);
+    updateBadge();
+  }
+
+  // Run when page loads
+  checkToasts();
+  renderList();
+  window.addEventListener('storage', function () {
+    checkToasts();
+    renderList();
+  });
 })();

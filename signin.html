@@ -12,6 +12,11 @@
     <p class="sub">Sign in, create an account, or check if one exists.</p>
 
     <!-- Tabs -->
+    <div class="tabs" role="tablist">
+      <button role="tab" id="tab-signin" aria-selected="true">Sign in</button>
+      <button role="tab" id="tab-create" aria-selected="false">Create account</button>
+      <button role="tab" id="tab-check" aria-selected="false">Check account</button>
+    </div>
     
 
     <!-- 1. SIGN IN -->
@@ -73,7 +78,7 @@
       <button class="btn" id="signout-btn">Sign out</button>
     </div>
 
-    <p id="hh"> Don't have a account <a href="create_acc.html" id="oo"> Create one</p></p>
+    <p id="hh" style="text-align: center; margin-top: 16px;">Don't have an account? <a href="create_acc.html" id="oo">Create one</a></p>
   </div>
 
   <script src="signin.js"></script>
