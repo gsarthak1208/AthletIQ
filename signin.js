@@ -86,12 +86,27 @@
     var btn = $('signin-btn');
     btn.disabled = true; btn.textContent = 'Signing in…';
     try {
+      var serverUser = null;
+      if (window.AthletIQ_API) {
+        try {
+          serverUser = await window.AthletIQ_API.login(email, password);
+        } catch (apiErr) {}
+      }
+
       var account = await store.get(keyOf(email));
       var hash = await hashPassword(email, password);
 
-      // Correct only if the account exists AND the password matches
-      if (account && account.passwordHash === hash) {
+      // Correct only if the account exists AND the password matches (or verified by server)
+      if (serverUser || (account && account.passwordHash === hash)) {
         localStorage.setItem('athletiq:session', keyOf(email));  // remember who signed in
+        if (serverUser && !account) {
+          await store.set(keyOf(email), {
+            name: serverUser.name,
+            role: serverUser.role,
+            passwordHash: hash,
+            createdAt: serverUser.createdAt
+          });
+        }
         window.location.href = 'home.html';                      // go to the home page
         return;
       }
@@ -114,6 +129,23 @@
   $('si-pw').addEventListener('keydown', function (e) {
     if (e.key === 'Enter') $('signin-btn').click();
   });
+
+  if ($('demo-signin-btn')) {
+    $('demo-signin-btn').onclick = function () {
+      localStorage.setItem('athletiq:session', 'alex@athletiq.com');
+      if (!localStorage.getItem('athletiq:alex@athletiq.com')) {
+        localStorage.setItem('athletiq:alex@athletiq.com', JSON.stringify({
+          name: 'Alex Morgan',
+          role: 'player',
+          sport: 'Football',
+          location: 'Los Angeles, USA',
+          team: 'AthletIQ FC',
+          createdAt: new Date().toISOString()
+        }));
+      }
+      window.location.href = 'home.html';
+    };
+  }
   }
 
   /* ---------- CREATE ACCOUNT ---------- */
@@ -189,6 +221,29 @@
   $('check-email').addEventListener('keydown', function (e) {
     if (e.key === 'Enter') $('check-btn').click();
   });
+  }
+
+  /* ---------- SIGN OUT & SESSION CHECK ---------- */
+  if ($('signout-btn')) {
+    $('signout-btn').onclick = function () {
+      localStorage.removeItem('athletiq:session');
+      location.reload();
+    };
+  }
+
+  var currentSession = localStorage.getItem('athletiq:session');
+  if (currentSession && $('panel-welcome') && $('welcome-title')) {
+    store.get(currentSession).then(function (acc) {
+      if (acc) {
+        if ($('panel-signin')) $('panel-signin').hidden = true;
+        if ($('panel-create')) $('panel-create').hidden = true;
+        if ($('panel-check')) $('panel-check').hidden = true;
+        if (document.querySelector('.tabs')) document.querySelector('.tabs').hidden = true;
+        $('panel-welcome').hidden = false;
+        $('welcome-title').textContent = 'Welcome back, ' + acc.name + '!';
+        $('welcome-text').innerHTML = 'You are already signed in as <strong>' + currentSession + '</strong>.<br><br><a href="home.html" class="btn" style="display:inline-block;text-align:center;text-decoration:none;margin-bottom:12px;">Go to Home</a>';
+      }
+    });
   }
 
   })();

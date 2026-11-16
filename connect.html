@@ -3,32 +3,156 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AthletIQ – Connect with people</title>
+  <title>AthletIQ – Scout & Athlete Directory</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.css"
+        integrity="sha512-Z0kTB03S7BU+JFU0nw9mjSBcRnZm2Bvm0tzOX9/OuOuz01XQfOpa0w/N9u6Jf2f1OAdegdIPWZ9nIZZ+keEvBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="theme.css">
   <link rel="stylesheet" href="connect.css">
 </head>
-<body>
-  <div class="wrap">
-    <h1>Athlet<span>IQ</span></h1>
-    <p class="sub"><a href="home.html">← Back to home</a></p>
+<body class="dark-mode">
 
-    <!-- Search box -->
-    <div class="card">
-      <h2>Connect with people</h2>
-      <label for="search">Search by email</label>
-      <input id="search" type="search" placeholder="Type an email, e.g. alex@gmail.com">
+  <!-- TOP APP NAVIGATION -->
+  <header class="app-nav">
+    <a href="home.html" class="nav-brand">
+      Athlet<span>IQ</span>
+      <span class="brand-badge">Directory</span>
+    </a>
+
+    <div class="nav-links">
+      <a href="home.html" class="nav-item">
+        <span class="icon"><i class="fa-solid fa-house"></i></span>
+        <span>Home</span>
+      </a>
+
+      <a href="profile.html" class="nav-item">
+        <span class="icon"><i class="fa-solid fa-user"></i></span>
+        <span>Profile</span>
+      </a>
+
+      <a href="connect.html" class="nav-item active">
+        <span class="icon"><i class="fa-solid fa-users"></i></span>
+        <span>Connect</span>
+      </a>
+
+      <a href="post.html" class="nav-item">
+        <span class="icon"><i class="fa-solid fa-circle-plus text-green"></i></span>
+        <span>New Post</span>
+      </a>
+
+      <a href="messages.html" class="nav-item">
+        <span class="icon"><i class="fa-solid fa-message"></i></span>
+        <span>Messages</span>
+      </a>
+
+      <a href="notification.html" class="nav-item">
+        <span class="icon"><i class="fa-solid fa-bell"></i></span>
+        <span>Alerts</span>
+        <span id="notif-count" class="nav-badge" hidden>0</span>
+      </a>
+
+      <div class="nav-divider"></div>
+
+      <!-- Settings Dropdown -->
+      <div class="settings-container">
+        <button class="nav-item" id="settingsBtn" style="background:none; border:none; cursor:pointer;">
+          <span class="icon"><i class="fa-solid fa-gear"></i></span>
+          <span>Settings</span>
+        </button>
+
+        <div class="settings-dropdown" id="settingsDropdown">
+          <div class="dropdown-title">Preferences</div>
+          <div class="dropdown-item">
+            <span><i class="fa-solid fa-moon"></i> Dark Theme</span>
+            <label class="switch">
+              <input type="checkbox" id="darkModeToggle" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+          <hr>
+          <div class="dropdown-item sign-out" id="signOut">
+            <span><i class="fa-solid fa-right-from-bracket"></i> Sign Out</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="connect-container">
+    <div class="connect-header">
+      <div>
+        <span class="section-tag">GLOBAL ATHLETIC DIRECTORY</span>
+        <h1>Connect with Athletes, Scouts & Coaches</h1>
+        <p>Expand your scouting network, explore trial opportunities, and start conversations.</p>
+      </div>
     </div>
 
-    <!-- Search results (only shown when something is typed) -->
+    <!-- SEARCH & FILTER BAR -->
+    <div class="directory-filter-card">
+      <div class="search-input-wrap">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input id="search" type="search" placeholder="Search by athlete name, email, sport (e.g. Football), club, or city...">
+      </div>
+
+      <div class="filter-controls-row">
+        <!-- Role Filters -->
+        <div class="role-filter-group">
+          <button class="role-pill active" data-role="all">All Members</button>
+          <button class="role-pill" data-role="player"><i class="fa-solid fa-running"></i> Players</button>
+          <button class="role-pill" data-role="coach"><i class="fa-solid fa-clipboard-user"></i> Coaches</button>
+          <button class="role-pill" data-role="agency"><i class="fa-solid fa-briefcase"></i> Agencies</button>
+        </div>
+
+        <!-- Sport Select -->
+        <select id="filterSportSelect" class="sport-select-box">
+          <option value="all">All Sports</option>
+          <option value="Football">⚽ Football</option>
+          <option value="Basketball">🏀 Basketball</option>
+          <option value="Tennis">🎾 Tennis</option>
+          <option value="Athletics">🏃 Track & Field</option>
+          <option value="Cricket">🏏 Cricket</option>
+          <option value="Boxing">🥊 Combat Sports</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- SEARCH RESULTS SECTION -->
     <div id="results-section" hidden>
-      <h2 class="section-title">Search results</h2>
-      <div id="results"></div>
+      <div class="section-title-row">
+        <h2>Matching Results</h2>
+        <span id="resultsCount" class="results-badge">0 found</span>
+      </div>
+      <div id="results" class="members-grid"></div>
     </div>
 
-    <!-- Recommended people -->
-    <h2 class="section-title">People you may know</h2>
-    <div id="recommended"></div>
-  </div>
+    <!-- RECOMMENDED CONNECTIONS -->
+    <div class="section-title-row">
+      <h2>Recommended for You</h2>
+      <span class="results-badge text-green">Scouted Matches</span>
+    </div>
+    <div id="recommended" class="members-grid"></div>
+  </main>
 
+  <!-- FOOTER -->
+  <footer class="app-footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>Athlet<span>IQ</span></h3>
+        <p>Connect with players, coaches, and sports agencies worldwide.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 AthletIQ. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <!-- Notification Toast Box -->
+  <div id="toast-box"></div>
+
+  <!-- SCRIPTS -->
+  <script src="api.js"></script>
+  <script src="connection.js"></script>
+  <script src="notification.js"></script>
   <script src="connect.js"></script>
 </body>
 </html>

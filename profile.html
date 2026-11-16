@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AthletIQ – Athlete Profile</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.css"
+        integrity="sha512-Z0kTB03S7BU+JFU0nw9mjSBcRnZm2Bvm0tzOX9/OuOuz01XQfOpa0w/N9u6Jf2f1OAdegdIPWZ9nIZZ+keEvBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="profile.css">
+</head>
+<body class="dark-mode">
+
+  <!-- TOP APP NAVIGATION -->
+  <header class="app-nav">
+    <a href="home.html" class="nav-brand">
+      Athlet<span>IQ</span>
+      <span class="brand-badge">Profile</span>
+    </a>
+
+    <div class="nav-links">
+      <a href="home.html" class="nav-item">
+        <span class="icon"><i class="fa-solid fa-house"></i></span>
+        <span>Home</span>
+      </a>
+
+      <a href="profile.html" class="nav-item active">
+        <span class="icon"><i class="fa-solid fa-user"></i></span>
+        <span>Profile</span>
+      </a>
+
+      <a href="connect.html" class="nav-item">
+        <span class="icon"><i class="fa-solid fa-users"></i></span>
+        <span>Connect</span>
+      </a>
+
+      <a href="post.html" class="nav-item">
+        <span class="icon"><i class="fa-solid fa-circle-plus text-green"></i></span>
+        <span>New Post</span>
+      </a>
+
+      <a href="messages.html" class="nav-item">
+        <span class="icon"><i class="fa-solid fa-message"></i></span>
+        <span>Messages</span>
+      </a>
+
+      <a href="notification.html" class="nav-item">
+        <span class="icon"><i class="fa-solid fa-bell"></i></span>
+        <span>Alerts</span>
+        <span id="notif-count" class="nav-badge" hidden>0</span>
+      </a>
+
+      <div class="nav-divider"></div>
+
+      <!-- Settings Dropdown -->
+      <div class="settings-container">
+        <button class="nav-item" id="settingsBtn" style="background:none; border:none; cursor:pointer;">
+          <span class="icon"><i class="fa-solid fa-gear"></i></span>
+          <span>Settings</span>
+        </button>
+
+        <div class="settings-dropdown" id="settingsDropdown">
+          <div class="dropdown-title">Preferences</div>
+          <div class="dropdown-item">
+            <span><i class="fa-solid fa-moon"></i> Dark Theme</span>
+            <label class="switch">
+              <input type="checkbox" id="darkModeToggle" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+          <hr>
+          <div class="dropdown-item sign-out" id="signOut">
+            <span><i class="fa-solid fa-right-from-bracket"></i> Sign Out</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="profile-container">
+    <!-- PROFILE BANNER & HEADER CARD -->
+    <section class="profile-header-card">
+      <div class="profile-cover">
+        <div class="cover-overlay"></div>
+      </div>
+      
+      <div class="profile-avatar-row">
+        <div class="profile-avatar-wrap">
+          <div class="profile-avatar" id="profAvatar">A</div>
+          <span class="online-indicator" title="Active Now"></span>
+        </div>
+        <div class="profile-header-actions">
+          <button class="btn-outline" id="btnShareProfile">
+            <i class="fa-solid fa-share-nodes"></i> Share
+          </button>
+          <button class="btn-primary" id="btnEditProfile">
+            <i class="fa-solid fa-pen-to-square"></i> Edit Profile
+          </button>
+        </div>
+      </div>
+
+      <div class="profile-main-info">
+        <div class="name-badge-row">
+          <h1 class="profile-name" id="profName">Athlete Name</h1>
+          <i class="fa-solid fa-circle-check text-green" style="font-size: 20px;" title="Verified Profile"></i>
+        </div>
+
+        <div class="profile-badges">
+          <span class="badge-role player" id="profRole">Player</span>
+          <span class="badge-sport" id="profSport">Football</span>
+          <span class="badge-sport" id="profPosition">Striker / CF</span>
+          <span class="badge-sport" id="profLocation"><i class="fa-solid fa-location-dot"></i> Worldwide</span>
+        </div>
+
+        <p class="profile-bio" id="profBio">
+          Dedicated athlete focused on high-performance training, match discipline, and seeking professional trial invitations.
+        </p>
+
+        <!-- ATHLETE PHYSICAL METRICS BAR -->
+        <div class="metrics-grid">
+          <div class="metric-item">
+            <span class="metric-label">Height</span>
+            <strong class="metric-val" id="profHeight">5'11" (180 cm)</strong>
+          </div>
+          <div class="metric-item">
+            <span class="metric-label">Weight</span>
+            <strong class="metric-val" id="profWeight">75 kg</strong>
+          </div>
+          <div class="metric-item">
+            <span class="metric-label">Dominant Foot/Hand</span>
+            <strong class="metric-val" id="profDominant">Right</strong>
+          </div>
+          <div class="metric-item">
+            <span class="metric-label">Current Club</span>
+            <strong class="metric-val text-green" id="profTeam">Independent / Free Agent</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- STATS STRIP -->
+      <div class="profile-stats-row">
+        <div class="stat-box">
+          <div class="stat-number" id="statPostsCount">0</div>
+          <div class="stat-label">Highlights & Posts</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number" id="statConnectionsCount">0</div>
+          <div class="stat-label">Network Connections</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number" id="statMemberSince">2026</div>
+          <div class="stat-label">Member Since</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number text-green" id="statScoutViews">342</div>
+          <div class="stat-label">Scout Views</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROFILE TABS SECTION -->
+    <div class="profile-tabs-bar">
+      <button class="profile-tab-btn active" data-tab="posts">
+        <i class="fa-solid fa-film"></i> Highlights & Posts
+      </button>
+      <button class="profile-tab-btn" data-tab="accolades">
+        <i class="fa-solid fa-trophy"></i> Accolades & Trophies
+      </button>
+      <button class="profile-tab-btn" data-tab="contact">
+        <i class="fa-solid fa-id-card"></i> Scouting Info & Contact
+      </button>
+    </div>
+
+    <!-- TAB 1: MY POSTS -->
+    <div id="tabContentPosts" class="tab-content-panel active">
+      <div class="feed-header">
+        <h3>My Published Highlights</h3>
+        <a href="post.html" class="btn-primary" style="padding: 6px 16px; font-size: 13px;">+ New Post</a>
+      </div>
+      <div id="myPostsList" class="my-posts-list">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+
+    <!-- TAB 2: ACCOLADES & TROPHIES -->
+    <div id="tabContentAccolades" class="tab-content-panel" hidden>
+      <div class="accolades-grid">
+        <div class="accolade-card">
+          <div class="accolade-icon"><i class="fa-solid fa-medal text-green"></i></div>
+          <div class="accolade-info">
+            <h4>Regional Academy Top Scorer</h4>
+            <span class="accolade-meta">2025 · Youth State League · 18 Goals</span>
+            <p>Awarded Golden Boot in the U-19 Championship after leading the team to regional finals.</p>
+          </div>
+        </div>
+        <div class="accolade-card">
+          <div class="accolade-icon"><i class="fa-solid fa-award text-green"></i></div>
+          <div class="accolade-info">
+            <h4>Combine MVP & Sprint Leader</h4>
+            <span class="accolade-meta">2025 · Summer Pro Combine</span>
+            <p>Clocked fastest 40-yard dash and highest vertical leap among 120 participating athletes.</p>
+          </div>
+        </div>
+        <div class="accolade-card">
+          <div class="accolade-icon"><i class="fa-solid fa-certificate text-green"></i></div>
+          <div class="accolade-info">
+            <h4>Certified Level 2 Athletic Conditioning</h4>
+            <span class="accolade-meta">National Strength & Conditioning Association</span>
+            <p>Completed intensive plyometric and neuromuscular injury prevention curriculum.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: SCOUTING INFO & CONTACT -->
+    <div id="tabContentContact" class="tab-content-panel" hidden>
+      <div class="card-aesthetic">
+        <h3 style="margin-bottom: 16px;">Scouting Representation & Inquiries</h3>
+        <div class="detail-row">
+          <span class="detail-label"><i class="fa-solid fa-envelope"></i> Primary Email</span>
+          <span class="detail-val" id="profEmail">user@example.com</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label"><i class="fa-solid fa-briefcase"></i> Agency Representation</span>
+          <span class="detail-val" id="profAgency">Open for Representation / Self-Represented</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label"><i class="fa-solid fa-plane-departure"></i> Travel / Trial Availability</span>
+          <span class="detail-val text-green">Available for Domestic & International Trials</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- EDIT PROFILE MODAL -->
+  <div class="modal-overlay" id="editModal" hidden>
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Edit Athlete Profile</h2>
+        <button class="modal-close-btn" id="closeModalBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid-2">
+          <div>
+            <label for="editName">Full Name</label>
+            <input id="editName" class="input-aesthetic" type="text" placeholder="Alex Morgan">
+          </div>
+          <div>
+            <label for="editRole">Account Role</label>
+            <select id="editRole" class="input-aesthetic">
+              <option value="player">Player</option>
+              <option value="coach">Coach</option>
+              <option value="agency">Sports Agency</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div>
+            <label for="editSport">Primary Sport</label>
+            <input id="editSport" class="input-aesthetic" type="text" placeholder="e.g. Football">
+          </div>
+          <div>
+            <label for="editPosition">Position / Discipline</label>
+            <input id="editPosition" class="input-aesthetic" type="text" placeholder="e.g. Center Forward / Point Guard">
+          </div>
+        </div>
+
+        <div class="form-grid-3">
+          <div>
+            <label for="editHeight">Height</label>
+            <input id="editHeight" class="input-aesthetic" type="text" placeholder="e.g. 6'1\" (185 cm)">
+          </div>
+          <div>
+            <label for="editWeight">Weight</label>
+            <input id="editWeight" class="input-aesthetic" type="text" placeholder="e.g. 78 kg">
+          </div>
+          <div>
+            <label for="editDominant">Foot / Hand</label>
+            <input id="editDominant" class="input-aesthetic" type="text" placeholder="e.g. Right">
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div>
+            <label for="editTeam">Current Team / Club</label>
+            <input id="editTeam" class="input-aesthetic" type="text" placeholder="e.g. Independent / North FC">
+          </div>
+          <div>
+            <label for="editLocation">Location / City</label>
+            <input id="editLocation" class="input-aesthetic" type="text" placeholder="e.g. Los Angeles, USA">
+          </div>
+        </div>
+
+        <label for="editBio">Bio & Playing Style</label>
+        <textarea id="editBio" class="input-aesthetic" rows="3" placeholder="Tell coaches, scouts, and players about your athletic journey and key strengths..."></textarea>
+
+        <button class="btn-primary" id="btnSaveProfile" style="width: 100%; margin-top: 18px; padding: 12px;">
+          Save Profile Changes
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast Box -->
+  <div id="toast-box"></div>
+
+  <!-- SCRIPTS -->
+  <script src="api.js"></script>
+  <script src="connection.js"></script>
+  <script src="notification.js"></script>
+  <script src="profile.js"></script>
+</body>
+</html>

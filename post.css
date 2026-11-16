@@ -1,240 +1,236 @@
-/* ===== SIMPLE CSS FOR ATHLETIQ =====
-   How CSS works:  selector { property: value; }
-   - selector = WHAT to style (a tag like body, a class like .card, an id like #name)
-   - property = WHAT to change (color, padding, ...)
-   - value    = HOW to change it
-*/
+/* ==========================================================================
+   NEW POST PAGE — AthletIQ
+   Loads after theme.css and home.css (reuses .post-card, .tool-btn, etc.)
+   ========================================================================== */
 
-/* 1. Make width/padding behave the way you expect, for every element */
-* {
-  box-sizing: border-box;
+[hidden] { display: none !important; }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
 }
 
-/* 2. The whole page */
-body {
-  background-color: #f2f4f7;   /* light grey background */
-  color: #222222;              /* dark grey text */
-  font-family: Arial, sans-serif;
-  font-size: 16px;
-  margin: 0;                   /* remove the default space around the page */
+.post-page {
+  width: 100%;
+  max-width: 720px;
+  margin: calc(var(--nav-height) + 28px) auto 48px auto;
+  padding: 0 20px;
 }
 
-/* 3. The box that holds everything. It sits in the middle of the page */
-.wrap {
-  max-width: 450px;            /* never wider than 450px */
-  margin: 0 auto;              /* "auto" on left/right = centered */
-  padding: 20px;               /* space inside the box */
-}
+.post-page-header { margin-bottom: 20px; }
 
-/* 4. Title "AthletIQ" */
-h1 {
+.post-page-header h1 {
   font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text-main);
   margin-bottom: 4px;
 }
 
-h1 span {
-  color: #0b6bff;              /* only the "IQ" part is blue */
+.post-page-header p {
+  font-size: 15px;
+  color: var(--text-secondary);
 }
 
-/* 5. The small grey line under the title */
-.sub {
-  color: #666666;
-  margin-bottom: 20px;
+/* ── COMPOSER ── */
+.composer-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 32px;
 }
 
-/* 6. The two tab buttons: "Create account" and "Check account" */
-.tabs {
-  display: flex;               /* puts the buttons side by side */
-  gap: 6px;                    /* space between them */
-  margin-bottom: 16px;
+.composer-top {
+  display: flex;
+  gap: 14px;
 }
 
-.tabs button {
-  flex: 1;                     /* both buttons share the width equally */
-  padding: 10px;
-  border: 1px solid #cccccc;
-  border-radius: 8px;          /* rounded corners */
-  background-color: white;
-  color: #666666;
-  font-size: 14px;
-  cursor: pointer;             /* hand icon when you hover */
+.creator-avatar {
+  width: 48px;
+  height: 48px;
+  font-size: 19px;
 }
 
-/* The tab that is currently selected */
-.tabs button[aria-selected="true"] {
-  background-color: #0b6bff;
-  border-color: #0b6bff;
-  color: white;
+.composer-fields { flex: 1; min-width: 0; }
+
+.composer-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 2px 0 10px;
 }
 
-/* 7. The white form box */
-.card {
-  background-color: white;
-  border: 1px solid #dddddd;
-  border-radius: 12px;
-  padding: 20px;
-}
-
-/* 8. Labels (the text above each input) */
-label {
-  display: block;              /* each label gets its own line */
-  font-weight: bold;
-  font-size: 14px;
-  margin-top: 14px;
-  margin-bottom: 6px;
-}
-
-/* 9. Input boxes and the dropdown */
-input,
-select {
+#text {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #cccccc;
-  border-radius: 8px;
-  font-size: 16px;
-}
-
-/* When you click inside an input, show a blue border */
-input:focus,
-select:focus {
+  min-height: 110px;
+  background: var(--input-bg);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-main);
+  resize: vertical;
   outline: none;
-  border-color: #0b6bff;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-/* 10. Red error text under an input */
-.err {
-  color: #c62828;
-  font-size: 13px;
-  min-height: 18px;            /* keeps space so the layout doesn't jump */
+#text::placeholder { color: var(--text-muted); }
+
+#text:focus {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px var(--brand-glow);
+}
+
+.field-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
   margin-top: 4px;
 }
 
-/* 11. The big blue buttons */
-.btn {
-  width: 100%;
-  margin-top: 18px;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  background-color: #0b6bff;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
+.char-count {
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  padding-top: 2px;
 }
 
-/* Button looks faded while it is working */
-.btn:disabled {
-  opacity: 0.5;
-  cursor: default;
-}
-
-/* 12. Result messages (shown after you click a button) */
-.msg {
-  margin-top: 16px;
-  padding: 12px;
-  border-radius: 8px;
-}
-
-.msg.ok {                      /* green = success */
-  background-color: #e3f6e8;
-  color: #1b6b35;
-}
-
-.msg.bad {                     /* red = error */
-  background-color: #fdeaea;
-  color: #b3261e;
-}
-
-.msg.info {                    /* yellow = notice */
-  background-color: #fff4d6;
-  color: #7a5200;
-}
-
-/* 13. Small grey note at the bottom */
-.hint {
+.err {
+  color: #ef4444;
   font-size: 13px;
-  color: #777777;
+  min-height: 18px;
+}
+
+/* ── MEDIA PREVIEW ── */
+#preview { margin-top: 6px; }
+
+.preview-wrap {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background: var(--hover-pill);
+}
+
+.preview-wrap img,
+.preview-wrap video {
+  display: block;
+  max-width: 100%;
+  max-height: 320px;
+}
+
+/* ── TOOLBAR (reuses .creator-bottom / .tool-btn / .tool-select from home.css) ── */
+.creator-bottom { flex-wrap: wrap; gap: 12px; }
+.creator-tools { flex-wrap: wrap; }
+
+/* ── MESSAGE ── */
+.msg {
   margin-top: 14px;
+  padding: 11px 14px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 500;
 }
 
-/* 14. IMPORTANT: this hides anything with the "hidden" attribute.
-   The tabs and messages rely on it, so keep it. */
-[hidden] {
-  display: none !important;
-}
+.msg.ok   { background: rgba(34, 197, 94, 0.12); color: #16a34a; border: 1px solid rgba(34, 197, 94, 0.3); }
+.msg.bad  { background: rgba(239, 68, 68, 0.1);  color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+.msg.info { background: rgba(99, 102, 241, 0.1); color: #6366f1; border: 1px solid rgba(99, 102, 241, 0.3); }
 
-/* 15. Welcome box shown after signing in */
-#panel-welcome h2 {
-  margin-top: 0;
-}
+#post-btn:disabled { opacity: 0.6; cursor: default; transform: none; }
 
-/* ===== EXTRA STYLES FOR THE ADD POST PAGE ===== */
-
-/* The big box where the user types the post */
-textarea {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #cccccc;
-  border-radius: 8px;
-  font-size: 16px;
-  font-family: Arial, sans-serif;
-  resize: vertical;            /* user can make it taller, not wider */
-}
-
-textarea:focus {
-  outline: none;
-  border-color: #0b6bff;
-}
+/* ── FEED ── */
+.feed-head { margin-bottom: 14px; }
 
 .feed-title {
-  margin-top: 28px;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-main);
 }
 
-/* One post */
-.post {
-  background-color: white;
-  border: 1px solid #dddddd;
-  border-radius: 12px;
+.post-card-header { align-items: flex-start; }
+
+.post-media {
+  margin-bottom: 14px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background: var(--hover-pill);
+}
+
+.post-media:empty { display: none; }
+
+.post-media img,
+.post-media video {
+  display: block;
+  width: 100%;
+  max-height: 480px;
+  object-fit: cover;
+}
+
+.post-media-note {
   padding: 14px;
-  margin-bottom: 12px;
+  font-size: 13px;
+  color: var(--text-muted);
 }
 
-.post-top {
-  font-weight: bold;
-  font-size: 14px;
-}
-
-.post-text {
-  margin: 8px 0;
-  white-space: pre-wrap;       /* keeps the line breaks the user typed */
-}
-
-.post-time {
+.post-time-row {
   font-size: 12px;
-  color: #777777;
+  color: var(--text-muted);
 }
 
 .delete-btn {
-  margin-top: 8px;
-  padding: 6px 12px;
-  border: 1px solid #c62828;
-  border-radius: 6px;
-  background-color: white;
-  color: #c62828;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  border: 1px solid transparent;
+  background: none;
+  color: #ef4444;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
   cursor: pointer;
+  transition: all 0.2s;
 }
 
-/* ===== PHOTO AND VIDEO ===== */
+.delete-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+}
 
-/* Preview shown under the file picker, and media inside posts */
-#preview img,
-#preview video,
-.post-media img,
-.post-media video {
-  max-width: 100%;               /* never wider than the box */
-  max-height: 350px;
-  border-radius: 8px;
-  margin-top: 10px;
+.empty-feed {
+  background: var(--bg-surface);
+  border: 1px dashed var(--border-hover);
+  border-radius: var(--radius-lg);
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.empty-feed i {
   display: block;
+  font-size: 32px;
+  color: var(--brand-primary);
+  margin-bottom: 10px;
+}
+
+@media (max-width: 560px) {
+  .post-page { padding: 0 14px; }
+  .composer-card { padding: 16px; }
+  .composer-top { gap: 10px; }
+  .creator-bottom { flex-direction: column; align-items: stretch; }
+  .creator-bottom .btn-primary { width: 100%; }
 }

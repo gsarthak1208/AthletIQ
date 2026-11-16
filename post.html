@@ -3,39 +3,156 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AthletIQ – Add post</title>
+  <title>AthletIQ – New Post</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.css"
+        integrity="sha512-Z0kTB03S7BU+JFU0nw9mjSBcRnZm2Bvm0tzOX9/OuOuz01XQfOpa0w/N9u6Jf2f1OAdegdIPWZ9nIZZ+keEvBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="home.css">
   <link rel="stylesheet" href="post.css">
 </head>
-<body>
-  <div class="wrap">
-    <h1>Athlet<span>IQ</span></h1>
-    <p class="sub"><a href="home.html">← Back to home</a></p>
+<body class="dark-mode">
 
-    <!-- The form where the user writes a post -->
-    <div class="card">
-      <h2>Add a post</h2>
+  <!-- TOP APP NAVIGATION -->
+  <header class="app-nav">
+    <a href="home.html" class="nav-brand">
+      Athlet<span>IQ</span>
+      <span class="brand-badge">New Post</span>
+    </a>
 
-      <label for="sport">Sport (optional)</label>
-      <input id="sport" placeholder="Cricket, Football, Tennis…">
+    <div class="nav-links">
+      <a href="home.html" class="nav-item">
+        <span class="icon"><i class="fa-solid fa-house"></i></span>
+        <span>Home</span>
+      </a>
 
-      <label for="text">What do you want to share?</label>
-      <textarea id="text" rows="4" maxlength="500" placeholder="Write your post here…"></textarea>
-      <div class="err" id="e-text"></div>
+      <a href="profile.html" class="nav-item">
+        <span class="icon"><i class="fa-solid fa-user"></i></span>
+        <span>Profile</span>
+      </a>
 
-      <label for="media">Photo or video (optional)</label>
-      <input id="media" type="file" accept="image/*,video/*">
-      <div id="preview"></div>
-      <div class="err" id="e-media"></div>
+      <a href="connect.html" class="nav-item">
+        <span class="icon"><i class="fa-solid fa-users"></i></span>
+        <span>Connect</span>
+      </a>
 
-      <button class="btn" id="post-btn">Post</button>
-      <div class="msg" id="post-msg" hidden></div>
+      <a href="post.html" class="nav-item active">
+        <span class="icon"><i class="fa-solid fa-circle-plus"></i></span>
+        <span>New Post</span>
+      </a>
+
+      <a href="messages.html" class="nav-item">
+        <span class="icon"><i class="fa-solid fa-message"></i></span>
+        <span>Messages</span>
+      </a>
+
+      <a href="notification.html" class="nav-item">
+        <span class="icon"><i class="fa-solid fa-bell"></i></span>
+        <span>Alerts</span>
+        <span id="notif-count" class="nav-badge" hidden>0</span>
+      </a>
+
+      <div class="nav-divider"></div>
+
+      <!-- Settings Dropdown -->
+      <div class="settings-container">
+        <button class="nav-item" id="settingsBtn" style="background:none; border:none; cursor:pointer;">
+          <span class="icon"><i class="fa-solid fa-gear"></i></span>
+          <span>Settings</span>
+        </button>
+
+        <div class="settings-dropdown" id="settingsDropdown">
+          <div class="dropdown-title">Preferences</div>
+          <div class="dropdown-item">
+            <span><i class="fa-solid fa-moon"></i> Dark Theme</span>
+            <label class="switch">
+              <input type="checkbox" id="darkModeToggle" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+          <hr>
+          <div class="dropdown-item sign-out" id="signOut">
+            <span><i class="fa-solid fa-right-from-bracket"></i> Sign Out</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="post-page">
+
+    <div class="post-page-header">
+      <h1>Create a post</h1>
+      <p>Share a match update, workout highlight, or trial news with scouts and coaches.</p>
     </div>
 
-    <!-- All posts are shown here -->
-    <h2 class="feed-title">Latest posts</h2>
-    <div id="feed"></div>
-  </div>
+    <!-- COMPOSER -->
+    <section class="composer-card">
+      <div class="composer-top">
+        <div class="creator-avatar" id="composerAvatar">A</div>
+        <div class="composer-fields">
+          <div class="composer-name" id="composerName">Alex Morgan</div>
 
+          <label for="text" class="sr-only">What do you want to share?</label>
+          <textarea id="text" rows="4" maxlength="500" placeholder="Share a match update, workout highlight, or trial news…"></textarea>
+          <div class="field-foot">
+            <div class="err" id="e-text"></div>
+            <span class="char-count"><span id="charCount">0</span>/500</span>
+          </div>
+
+          <div id="preview"></div>
+          <div class="err" id="e-media"></div>
+        </div>
+      </div>
+
+      <div class="creator-bottom">
+        <div class="creator-tools">
+          <label class="tool-btn" for="media" title="Attach photo or video">
+            <i class="fa-solid fa-photo-film"></i> Photo / Video
+          </label>
+          <input id="media" type="file" accept="image/*,video/*" hidden>
+
+          <label for="sport" class="sr-only">Sport</label>
+          <select id="sport" class="tool-select">
+            <option value="">All sports</option>
+            <option value="Football">⚽ Football</option>
+            <option value="Basketball">🏀 Basketball</option>
+            <option value="Tennis">🎾 Tennis</option>
+            <option value="Athletics">🏃 Track &amp; Field</option>
+            <option value="Cricket">🏏 Cricket</option>
+            <option value="Boxing">🥊 Combat Sports</option>
+            <option value="Swimming">🏊 Swimming</option>
+          </select>
+        </div>
+
+        <button class="btn-primary" id="post-btn" type="button">
+          <i class="fa-solid fa-paper-plane"></i> Post
+        </button>
+      </div>
+
+      <div class="msg" id="post-msg" hidden></div>
+    </section>
+
+    <!-- FEED -->
+    <div class="feed-head">
+      <h2 class="feed-title">Latest posts</h2>
+    </div>
+    <div id="feed" class="feed-posts-list"></div>
+  </main>
+
+  <footer class="app-footer">
+    <div class="footer-bottom" style="margin-top:0; border-top:none; padding-top:0;">
+      <span>&copy; 2026 AthletIQ. All rights reserved.</span>
+      <span>The sports networking platform</span>
+    </div>
+  </footer>
+
+  <!-- Notification Toast Box -->
+  <div id="toast-box"></div>
+
+  <script src="api.js"></script>
+  <script src="connection.js"></script>
+  <script src="notification.js"></script>
   <script src="post.js"></script>
 </body>
 </html>

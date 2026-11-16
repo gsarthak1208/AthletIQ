@@ -5,12 +5,15 @@
   // Normalise an email so "Alex@Mail.com " and "alex@mail.com" are the same account.
   function keyOf(email) { return email.trim().toLowerCase(); }
 
+  /* ---------- Theme: same saved choice as the other pages ---------- */
+  (function applyTheme() {
+    var saved = localStorage.getItem('darkMode');
+    document.body.classList.toggle('dark-mode', saved === null ? true : saved === 'true');
+  })();
+
   /* ------------------------------------------------------------------
      STORAGE LAYER
-     Only these two functions touch storage. For a real backend, replace
-     the bodies with fetch() calls, e.g.:
-       get: fetch('/api/accounts/' + encodeURIComponent(k)).then(...)
-       set: fetch('/api/accounts', { method: 'POST', body: JSON.stringify(...) })
+     Only these two functions touch localStorage.
   ------------------------------------------------------------------- */
   var store = {
     get: async function (k) {
@@ -21,6 +24,18 @@
       localStorage.setItem('athletiq:' + k, JSON.stringify(value));
     }
   };
+
+  /* ------------------------------------------------------------------
+     PASSWORD HASH: Demo SHA-256 (matches signin.js)
+  ------------------------------------------------------------------- */
+  async function hashPassword(email, password) {
+    var text = keyOf(email) + ':' + password;
+    var bytes = new TextEncoder().encode(text);
+    var buffer = await crypto.subtle.digest('SHA-256', bytes);
+    return Array.from(new Uint8Array(buffer))
+      .map(function (b) { return b.toString(16).padStart(2, '0'); })
+      .join('');
+  }
 
   /* ---------- tabs ---------- */
   function showTab(which) {
@@ -38,6 +53,18 @@
     el.textContent = text;
     el.hidden = false;
   }
+
+  /* ---------- show / hide password (eye buttons) ---------- */
+  document.querySelectorAll('.toggle-pw').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var input = $(btn.getAttribute('data-target'));
+      if (!input) return;
+      var show = input.type === 'password';
+      input.type = show ? 'text' : 'password';
+      var icon = btn.querySelector('i');
+      if (icon) icon.className = show ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye';
+    });
+  });
 
   /* ---------- create account ---------- */
   $('create-btn').onclick = async function () {
@@ -64,11 +91,32 @@
       if (existing) {
         showMsg($('create-msg'), 'bad', 'An account with this email already exists.');
       } else {
-        // NOTE: never store plain-text passwords. Send it to your backend,
-        // which should hash it (bcrypt/argon2). It is not saved here.
-        await store.set(key, { name: name, role: $('role').value, createdAt: new Date().toISOString() });
-        showMsg($('create-msg'), 'ok', 'Account created for ' + email + '. Welcome, ' + name.split(' ')[0] + '!');
+        var passwordHash = await hashPassword(email, pw);
+
+        // Sync with backend database if running
+        if (window.AthletIQ_API) {
+          try {
+            await window.AthletIQ_API.register(name, email, $('role').value, pw);
+          } catch (apiErr) {
+            if (apiErr.message && apiErr.message.toLowerCase().includes('already exists')) {
+              showMsg($('create-msg'), 'bad', apiErr.message);
+              btn.disabled = false; btn.textContent = 'Create account';
+              return;
+            }
+          }
+        }
+
+        await store.set(key, {
+          name: name,
+          role: $('role').value,
+          passwordHash: passwordHash,
+          createdAt: new Date().toISOString()
+        });
+        showMsg($('create-msg'), 'ok', 'Account created! Welcome, ' + name.split(' ')[0] + '! You can now sign in.');
         $('name').value = $('email').value = $('pw').value = $('pw2').value = '';
+        setTimeout(function () {
+          window.location.href = 'signin.html';
+        }, 1500);
       }
     } catch (e) {
       showMsg($('create-msg'), 'info', 'Couldn’t save the account. Please try again.');

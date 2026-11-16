@@ -1,180 +1,451 @@
-/* ===== SIMPLE CSS FOR ATHLETIQ =====
-   How CSS works:  selector { property: value; }
-   - selector = WHAT to style (a tag like body, a class like .card, an id like #name)
-   - property = WHAT to change (color, padding, ...)
-   - value    = HOW to change it
-*/
+/* ==========================================================================
+   SIGN IN PAGE — AthletIQ
+   Theme: Jet Black + Crimson Red
+   ========================================================================== */
 
-/* 1. Make width/padding behave the way you expect, for every element */
-* {
-  box-sizing: border-box;
+:root {
+  --brand: #e63946;
+  --brand-hover: #cc2f3b;
+  --brand-glow: rgba(230, 57, 70, 0.3);
+  --brand-subtle: rgba(230, 57, 70, 0.1);
+  --brand-border: rgba(230, 57, 70, 0.4);
 }
 
-/* 2. The whole page */
-body {
-  background-color: #f2f4f7;   /* light grey background */
-  color: #222222;              /* dark grey text */
-  font-family: Arial, sans-serif;
-  font-size: 16px;
-  margin: 0;                   /* remove the default space around the page */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* 3. The box that holds everything. It sits in the middle of the page */
-.wrap {
-  max-width: 450px;            /* never wider than 450px */
-  margin: 0 auto;              /* "auto" on left/right = centered */
-  padding: 20px;               /* space inside the box */
+body.dark-mode {
+  background: #0a0a0a;
+  color: #fff;
 }
 
-/* 4. Title "AthletIQ" */
-h1 {
-  font-size: 28px;
-  margin-bottom: 4px;
+/* ── LAYOUT ── */
+.auth-layout {
+  display: flex;
+  min-height: 100vh;
 }
 
-h1 span {
-  color: rgb(48, 144, 48);              /* only the "IQ" part is blue */
+/* ── LEFT BRAND PANEL ── */
+.brand-panel {
+  width: 45%;
+  background: #111111;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid #1e1e1e;
 }
 
-/* 5. The small grey line under the title */
-.sub {
-  color: #666666;
-  margin-bottom: 20px;
+.brand-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 30% 40%, rgba(230,57,70,0.18) 0%, transparent 70%);
+  pointer-events: none;
 }
 
-/* 6. The two tab buttons: "Create account" and "Check account" */
-.tabs {
-  display: flex;               /* puts the buttons side by side */
-  gap: 6px;                    /* space between them */
-  margin-bottom: 16px;
-}
-
-.tabs button {
-  flex: 1;                     /* both buttons share the width equally */
-  padding: 10px;
-  border: 1px solid #cccccc;
-  border-radius: 8px;          /* rounded corners */
-  background-color: white;
-  color: #666666;
-  font-size: 14px;
-  cursor: pointer;             /* hand icon when you hover */
-}
-
-/* The tab that is currently selected */
-.tabs button[aria-selected="true"] {
-  background-color: rgb(48, 144, 48);
-  border-color: rgb(48, 144, 48);
-  color: white;
-}
-
-/* 7. The white form box */
-.card {
-  background-color: white;
-  border: 1px solid #dddddd;
-  border-radius: 12px;
-  padding: 20px;
-}
-
-/* 8. Labels (the text above each input) */
-label {
-  display: block;              /* each label gets its own line */
-  font-weight: bold;
-  font-size: 14px;
-  margin-top: 14px;
-  margin-bottom: 6px;
-}
-
-/* 9. Input boxes and the dropdown */
-input,
-select {
+.brand-panel-inner {
+  position: relative;
+  z-index: 1;
+  padding: 60px 50px;
+  max-width: 480px;
   width: 100%;
-  padding: 10px;
-  border: 1px solid #cccccc;
-  border-radius: 8px;
-  font-size: 16px;
 }
 
-/* When you click inside an input, show a blue border */
-input:focus,
-select:focus {
-  outline: none;
-  border-color: rgb(48, 144, 48);
+.brand-logo {
+  display: inline-block;
+  font-size: 32px;
+  font-weight: 900;
+  color: #fff;
+  text-decoration: none;
+  letter-spacing: -1px;
+  margin-bottom: 64px;
 }
 
-/* 10. Red error text under an input */
-.err {
-  color: #c62828;
-  font-size: 13px;
-  min-height: 18px;            /* keeps space so the layout doesn't jump */
+.brand-logo span {
+  color: var(--brand);
+  text-shadow: 0 0 20px var(--brand-glow);
+}
+
+.brand-tagline h2 {
+  font-size: 38px;
+  font-weight: 800;
+  line-height: 1.15;
+  color: #fff;
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
+}
+
+.brand-tagline p {
+  font-size: 15px;
+  line-height: 1.65;
+  color: #888;
+  max-width: 360px;
+}
+
+.brand-stats {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-top: 56px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid #222;
+  border-radius: 16px;
+  padding: 24px 32px;
+  backdrop-filter: blur(4px);
+}
+
+.stat-item {
+  flex: 1;
+  text-align: center;
+}
+
+.stat-num {
+  display: block;
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--brand);
+  letter-spacing: -0.5px;
+}
+
+.stat-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
   margin-top: 4px;
 }
 
-/* 11. The big blue buttons */
-.btn {
+.stat-divider {
+  width: 1px;
+  height: 36px;
+  background: #2a2a2a;
+}
+
+/* Decorative circles */
+.brand-deco-circles { position: absolute; inset: 0; pointer-events: none; }
+.deco-circle {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(230,57,70,0.12);
+}
+.c1 { width: 400px; height: 400px; bottom: -120px; right: -100px; }
+.c2 { width: 240px; height: 240px; bottom: -60px; right: -40px; border-color: rgba(230,57,70,0.2); }
+.c3 { width: 120px; height: 120px; bottom: 0; right: 20px; background: rgba(230,57,70,0.04); }
+
+/* ── RIGHT FORM PANEL ── */
+.form-panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0a0a0a;
+  padding: 40px 24px;
+}
+
+.form-panel-inner {
   width: 100%;
-  margin-top: 18px;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  background-color: rgb(48, 144, 48);
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
+  max-width: 420px;
 }
 
-/* Button looks faded while it is working */
-.btn:disabled {
-  opacity: 0.5;
-  cursor: default;
+.mobile-logo {
+  display: none;
+  font-size: 26px;
+  font-weight: 900;
+  color: #fff;
+  text-decoration: none;
+  margin-bottom: 32px;
+}
+.mobile-logo span { color: var(--brand); }
+
+.form-header {
+  margin-bottom: 36px;
 }
 
-/* 12. Result messages (shown after you click a button) */
-.msg {
-  margin-top: 16px;
-  padding: 12px;
-  border-radius: 8px;
+.form-header h1 {
+  font-size: 30px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
 }
 
-.msg.ok {                      /* green = success */
-  background-color: #e3f6e8;
-  color: #1b6b35;
+.form-header p {
+  font-size: 14px;
+  color: #666;
 }
 
-.msg.bad {                     /* red = error */
-  background-color: #fdeaea;
-  color: #b3261e;
+/* ── FORM FIELDS ── */
+.auth-form { display: flex; flex-direction: column; gap: 0; }
+
+.field-group {
+  margin-bottom: 20px;
 }
 
-.msg.info {                    /* yellow = notice */
-  background-color: #fff4d6;
-  color: #7a5200;
-}
-
-/* 13. Small grey note at the bottom */
-.hint {
+.field-group label {
+  display: block;
   font-size: 13px;
-  color: #777777;
-  margin-top: 14px;
+  font-weight: 600;
+  color: #ccc;
+  margin-bottom: 8px;
 }
 
-/* 14. IMPORTANT: this hides anything with the "hidden" attribute.
-   The tabs and messages rely on it, so keep it. */
-[hidden] {
-  display: none !important;
+.label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
 }
 
-/* 15. Welcome box shown after signing in */
-#panel-welcome h2 {
-  margin-top: 0;
+.label-row label { margin-bottom: 0; }
+
+.forgot-link {
+  font-size: 12px;
+  color: var(--brand);
+  text-decoration: none;
+  font-weight: 600;
+}
+.forgot-link:hover { text-decoration: underline; }
+
+.input-wrap {
+  position: relative;
 }
 
-#oo
-{
-  color: #1b6b35;
-  
+.input-wrap input {
+  width: 100%;
+  padding: 13px 16px 13px 44px;
+  background: #141414;
+  border: 1.5px solid #262626;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
-#hh
-{
-    margin-left : 90px;
+
+.input-wrap input::placeholder { color: #444; }
+
+.input-wrap input:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-subtle);
+}
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 15px;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.toggle-pw {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  opacity: 0.4;
+  transition: opacity 0.2s;
+  padding: 4px;
+}
+.toggle-pw:hover { opacity: 0.8; }
+
+/* ── CHECKBOX ── */
+.remember-row { margin-bottom: 24px; }
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #888;
+  user-select: none;
+}
+
+.checkbox-label input { display: none; }
+
+.checkbox-custom {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid #333;
+  border-radius: 5px;
+  background: #141414;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.checkbox-label input:checked + .checkbox-custom {
+  background: var(--brand);
+  border-color: var(--brand);
+}
+
+.checkbox-label input:checked + .checkbox-custom::after {
+  content: '✓';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: #fff;
+  font-weight: 800;
+}
+
+/* ── BUTTONS ── */
+.btn-auth {
+  width: 100%;
+  padding: 14px;
+  background: var(--brand);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 20px var(--brand-glow);
+  letter-spacing: 0.2px;
+}
+
+.btn-auth:hover {
+  background: var(--brand-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 28px rgba(230,57,70,0.4);
+}
+
+.btn-auth:active { transform: translateY(0); }
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  color: #333;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #222;
+}
+
+.btn-demo {
+  width: 100%;
+  padding: 13px;
+  background: transparent;
+  color: #aaa;
+  font-size: 14px;
+  font-weight: 600;
+  border: 1.5px solid #262626;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-demo:hover {
+  border-color: var(--brand-border);
+  color: var(--brand);
+  background: var(--brand-subtle);
+}
+
+.switch-link {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 13px;
+  color: #555;
+}
+
+.switch-link a {
+  color: var(--brand);
+  text-decoration: none;
+  font-weight: 600;
+}
+.switch-link a:hover { text-decoration: underline; }
+
+/* ── MESSAGES ── */
+.err {
+  font-size: 12px;
+  color: #f87171;
+  margin-top: 5px;
+  min-height: 16px;
+}
+
+.msg {
+  margin-top: 12px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.msg.ok { background: rgba(34,197,94,0.1); color: #4ade80; border: 1px solid rgba(34,197,94,0.2); }
+.msg.bad { background: rgba(239,68,68,0.1); color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+.msg.info { background: rgba(99,102,241,0.1); color: #818cf8; border: 1px solid rgba(99,102,241,0.2); }
+
+/* ── WELCOME BOX ── */
+.welcome-box {
+  text-align: center;
+  padding: 32px 0;
+  margin-bottom: 24px;
+}
+
+.welcome-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--brand-subtle);
+  border: 2px solid var(--brand-border);
+  color: var(--brand);
+  font-size: 28px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.welcome-box h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.welcome-box p {
+  font-size: 13px;
+  color: #888;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .brand-panel { display: none; }
+  .mobile-logo { display: block; }
+  .form-panel { background: #0a0a0a; }
 }
