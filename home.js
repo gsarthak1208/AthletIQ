@@ -1,6 +1,4 @@
-// --- Authentication & Preview Check ---
-// If you preview home.html without signing in first, a demo account is auto-loaded
-// so you can see and test your home page immediately!
+// --- Authentication & Session Check ---
 let sessionEmail = localStorage.getItem("athletiq:session");
 if (!sessionEmail) {
     sessionEmail = "alex@athletiq.com";
@@ -30,8 +28,13 @@ if (!localStorage.getItem("athletiq:posts")) {
             author: "Marcus Vance",
             role: "player",
             sport: "Football",
-            text: "Great training session today! Focusing on agility drills and quick sprint transitions. Looking forward to our tournament next weekend! ⚽🔥",
+            text: "Great training session today! Focusing on agility drills and quick sprint transitions. Looking forward to our showcase match this weekend! ⚽🔥",
             mediaType: "",
+            likes: 14,
+            likedBy: [],
+            comments: [
+                { author: "Coach Davis", text: "Keep that intensity up, Marcus!", createdAt: new Date().toISOString() }
+            ],
             createdAt: new Date(Date.now() - 3600000 * 4).toISOString()
         },
         {
@@ -40,8 +43,11 @@ if (!localStorage.getItem("athletiq:posts")) {
             author: "Coach Davis",
             role: "coach",
             sport: "Basketball",
-            text: "Open basketball trials and high-performance development clinics are starting this Thursday. Open to all aspiring college players! Send me a message if interested. 🏀🏆",
+            text: "Open basketball trials and high-performance development clinics are starting this Thursday. Open to all aspiring college players! Send me a direct message if interested. 🏀🏆",
             mediaType: "",
+            likes: 29,
+            likedBy: [],
+            comments: [],
             createdAt: new Date(Date.now() - 3600000 * 2).toISOString()
         }
     ]));
@@ -80,26 +86,67 @@ initHomePage();
 
 function initHomePage() {
     // --- Elements ---
+    const homeAvatar = document.getElementById("homeAvatar");
+    const creatorAvatar = document.getElementById("creatorAvatar");
+    const homeTitle = document.getElementById("homeWelcomeTitle");
+    const homeSub = document.getElementById("homeWelcomeSub");
+    const homeRoleBadge = document.getElementById("homeRoleBadge");
+    const statPosts = document.getElementById("statPosts");
+    const statConnections = document.getElementById("statConnections");
+    const notifCount = document.getElementById("notif-count");
+    const homeFeed = document.getElementById("homeFeed");
+
+    // Quick creator elements
+    const quickPostText = document.getElementById("quickPostText");
+    const quickPostMedia = document.getElementById("quickPostMedia");
+    const quickPostSport = document.getElementById("quickPostSport");
+    const quickMediaPreview = document.getElementById("quickMediaPreview");
+    const mediaPreviewContent = document.getElementById("mediaPreviewContent");
+    const btnRemoveQuickMedia = document.getElementById("btnRemoveQuickMedia");
+    const btnPublishQuick = document.getElementById("btnPublishQuick");
+
+    // Settings elements
     const settingsBtn = document.getElementById("settingsBtn");
     const dropdown = document.getElementById("settingsDropdown");
     const darkToggle = document.getElementById("darkModeToggle");
     const signOut = document.getElementById("signOut");
-    const homeAvatar = document.getElementById("homeAvatar");
-    const homeTitle = document.getElementById("homeWelcomeTitle");
-    const homeSub = document.getElementById("homeWelcomeSub");
-    const notifCount = document.getElementById("notif-count");
-    const homeFeed = document.getElementById("homeFeed");
 
-    // Populate user profile info
-    if (homeAvatar) homeAvatar.textContent = currentAccount.name.charAt(0).toUpperCase();
-    if (homeTitle) homeTitle.textContent = "Welcome back, " + currentAccount.name + "!";
+    let currentSportFilter = "all";
+    let selectedMediaFile = null;
+
+    // --- Populate Profile Summary ---
+    const initials = (currentAccount.name || "A").charAt(0).toUpperCase();
+    if (homeAvatar) homeAvatar.textContent = initials;
+    if (creatorAvatar) creatorAvatar.textContent = initials;
+    if (homeTitle) homeTitle.textContent = currentAccount.name;
+    if (homeRoleBadge) {
+        homeRoleBadge.textContent = currentAccount.role || "Player";
+        homeRoleBadge.className = "badge-role " + (currentAccount.role || "player");
+    }
     if (homeSub) {
-        const roleNames = { player: "Player", coach: "Coach", agency: "Sports Agency" };
-        const roleLabel = roleNames[currentAccount.role] || currentAccount.role;
-        homeSub.textContent = roleLabel + " · " + sessionEmail;
+        homeSub.textContent = (currentAccount.sport || "All Sports") + " · " + (currentAccount.location || "Global");
     }
 
-    // --- Notification Badge ---
+    // Populate stats
+    function updateProfileStats() {
+        let posts = [];
+        try { posts = JSON.parse(localStorage.getItem("athletiq:posts") || "[]"); } catch (e) {}
+        const myCount = posts.filter(p => p.email === sessionEmail).length;
+        if (statPosts) statPosts.textContent = myCount;
+
+        if (statConnections) {
+            try {
+                const requests = JSON.parse(localStorage.getItem("athletiq_requests") || "[]");
+                const connCount = requests.filter(r => (r.from === sessionEmail || r.to === sessionEmail) && r.status === "accepted").length;
+                statConnections.textContent = connCount;
+            } catch (e) {
+                statConnections.textContent = "0";
+            }
+        }
+    }
+    updateProfileStats();
+
+    // Notification Badge
     if (typeof Connections !== "undefined" && notifCount) {
         const count = Connections.unreadCount(sessionEmail);
         if (count > 0) {
@@ -110,13 +157,12 @@ function initHomePage() {
         }
     }
 
-    // --- Settings Dropdown ---
+    // --- Settings Dropdown & Dark Mode ---
     if (settingsBtn && dropdown) {
         settingsBtn.addEventListener("click", (e) => {
-            e.preventDefault();
+            e.stopPropagation();
             dropdown.classList.toggle("active");
         });
-
         document.addEventListener("click", (e) => {
             if (!e.target.closest(".settings-container")) {
                 dropdown.classList.remove("active");
@@ -124,14 +170,15 @@ function initHomePage() {
         });
     }
 
-    // --- Dark Mode ---
     function setDarkMode(enabled) {
         document.body.classList.toggle("dark-mode", enabled);
         localStorage.setItem("darkMode", enabled);
         if (darkToggle) darkToggle.checked = enabled;
     }
 
-    setDarkMode(localStorage.getItem("darkMode") === "true");
+    // Load theme preference (default to dark for athletic aesthetic)
+    const savedTheme = localStorage.getItem("darkMode");
+    setDarkMode(savedTheme === null ? true : savedTheme === "true");
 
     if (darkToggle) {
         darkToggle.addEventListener("change", () => {
@@ -139,18 +186,16 @@ function initHomePage() {
         });
     }
 
-    // --- Sign Out ---
     if (signOut) {
         signOut.addEventListener("click", () => {
-            const confirmLogout = confirm("Are you sure you want to sign out?");
-            if (confirmLogout) {
+            if (confirm("Sign out of AthletIQ?")) {
                 localStorage.removeItem("athletiq:session");
                 window.location.href = "signin.html";
             }
         });
     }
 
-    // --- Load Media from IndexedDB ---
+    // --- IndexedDB for Heavy Media Storage ---
     function openDb() {
         return new Promise((resolve, reject) => {
             const request = indexedDB.open("athletiq-media", 1);
@@ -160,7 +205,18 @@ function initHomePage() {
         });
     }
 
-    function getMedia(id) {
+    function saveMediaToDb(id, file) {
+        return openDb().then((db) => {
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction("files", "readwrite");
+                tx.objectStore("files").put(file, id);
+                tx.oncomplete = () => { resolve(); };
+                tx.onerror = () => { reject(tx.error); };
+            });
+        });
+    }
+
+    function getMediaFromDb(id) {
         return openDb().then((db) => {
             return new Promise((resolve, reject) => {
                 const tx = db.transaction("files", "readonly");
@@ -171,7 +227,102 @@ function initHomePage() {
         });
     }
 
-    // --- Load Posts for Feed ---
+    // --- Quick Inline Post Creator Logic ---
+    if (quickPostMedia) {
+        quickPostMedia.addEventListener("change", () => {
+            const file = quickPostMedia.files[0];
+            if (!file) return;
+            selectedMediaFile = file;
+
+            const url = URL.createObjectURL(file);
+            mediaPreviewContent.innerHTML = "";
+            const isVideo = file.type.startsWith("video/");
+            const el = document.createElement(isVideo ? "video" : "img");
+            el.src = url;
+            if (isVideo) el.controls = true;
+            mediaPreviewContent.appendChild(el);
+            quickMediaPreview.hidden = false;
+        });
+    }
+
+    if (btnRemoveQuickMedia) {
+        btnRemoveQuickMedia.addEventListener("click", () => {
+            selectedMediaFile = null;
+            quickPostMedia.value = "";
+            mediaPreviewContent.innerHTML = "";
+            quickMediaPreview.hidden = true;
+        });
+    }
+
+    if (btnPublishQuick) {
+        btnPublishQuick.addEventListener("click", async () => {
+            const text = quickPostText.value.trim();
+            const sport = quickPostSport.value;
+
+            if (!text && !selectedMediaFile) {
+                alert("Please write a post or attach a photo/video.");
+                return;
+            }
+
+            btnPublishQuick.disabled = true;
+            btnPublishQuick.textContent = "Posting…";
+
+            try {
+                const id = Date.now();
+                let mediaType = "";
+
+                if (selectedMediaFile) {
+                    await saveMediaToDb(id, selectedMediaFile);
+                    mediaType = selectedMediaFile.type.startsWith("video/") ? "video" : "image";
+                }
+
+                let posts = [];
+                try { posts = JSON.parse(localStorage.getItem("athletiq:posts") || "[]"); } catch (e) {}
+
+                const newPost = {
+                    id: id,
+                    email: sessionEmail,
+                    author: currentAccount.name,
+                    role: currentAccount.role || "player",
+                    sport: sport,
+                    text: text,
+                    mediaType: mediaType,
+                    likes: 0,
+                    likedBy: [],
+                    comments: [],
+                    createdAt: new Date().toISOString()
+                };
+
+                posts.push(newPost);
+                localStorage.setItem("athletiq:posts", JSON.stringify(posts));
+
+                // Clear input
+                quickPostText.value = "";
+                if (btnRemoveQuickMedia) btnRemoveQuickMedia.click();
+
+                updateProfileStats();
+                loadFeed();
+            } catch (err) {
+                alert("Could not publish post. Please try again.");
+            }
+
+            btnPublishQuick.disabled = false;
+            btnPublishQuick.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Post';
+        });
+    }
+
+    // --- Sport Filter Pills ---
+    const filterPills = document.querySelectorAll(".filter-pill");
+    filterPills.forEach(pill => {
+        pill.addEventListener("click", () => {
+            filterPills.forEach(p => p.classList.remove("active"));
+            pill.classList.add("active");
+            currentSportFilter = pill.getAttribute("data-sport");
+            loadFeed();
+        });
+    });
+
+    // --- Load & Render Feed ---
     const activeBlobUrls = [];
     function loadFeed() {
         if (!homeFeed) return;
@@ -181,58 +332,100 @@ function initHomePage() {
 
         let posts = [];
         try {
-            const rawPosts = localStorage.getItem("athletiq:posts");
-            posts = rawPosts ? JSON.parse(rawPosts) : [];
+            posts = JSON.parse(localStorage.getItem("athletiq:posts") || "[]");
         } catch (e) {
             posts = [];
         }
 
+        // Apply Sport Filter
+        if (currentSportFilter !== "all") {
+            posts = posts.filter(p => (p.sport || "").toLowerCase() === currentSportFilter.toLowerCase());
+        }
+
         if (posts.length === 0) {
-            homeFeed.innerHTML = '<div class="no-posts-card"><p>No posts yet in the community.</p><a href="post.html" class="action-btn" style="display:inline-block;margin-top:10px;">Be the first to share</a></div>';
+            homeFeed.innerHTML = `
+                <div class="card-aesthetic" style="text-align:center; padding: 40px 20px; color: var(--text-muted);">
+                    <i class="fa-solid fa-trophy" style="font-size: 38px; color: var(--green-primary); margin-bottom: 12px; display:block;"></i>
+                    <h4 style="color:var(--text-main); margin-bottom:6px;">No posts in ${currentSportFilter === "all" ? "the community" : currentSportFilter} yet</h4>
+                    <p style="font-size:13px; max-width:320px; margin:0 auto;">Be the first athlete or coach to publish a highlight or update!</p>
+                </div>
+            `;
             return;
         }
 
         posts.slice().reverse().forEach((post) => {
-            const postCard = document.createElement("div");
-            postCard.className = "post-card";
+            const card = document.createElement("div");
+            card.className = "post-card";
 
-            const postHeader = document.createElement("div");
-            postHeader.className = "post-card-header";
+            // Header
+            const header = document.createElement("div");
+            header.className = "post-card-header";
 
-            const authorAvatar = document.createElement("div");
-            authorAvatar.className = "post-avatar";
-            authorAvatar.textContent = (post.author || "A").charAt(0).toUpperCase();
+            const authorWrap = document.createElement("div");
+            authorWrap.className = "post-author-wrap";
 
-            const authorInfo = document.createElement("div");
-            authorInfo.className = "post-author-info";
+            const avatar = document.createElement("div");
+            avatar.className = "post-avatar";
+            avatar.textContent = (post.author || "A").charAt(0).toUpperCase();
 
-            const authorName = document.createElement("div");
-            authorName.className = "post-author-name";
-            authorName.textContent = post.author || "Athlete";
+            const info = document.createElement("div");
+            const nameRow = document.createElement("div");
+            nameRow.className = "post-author-name";
+            nameRow.innerHTML = `${post.author} <i class="fa-solid fa-circle-check text-green" style="font-size:12px;" title="Verified Profile"></i>`;
 
-            const postMeta = document.createElement("div");
-            postMeta.className = "post-author-meta";
-            postMeta.textContent = (post.role ? post.role : "Member") + (post.sport ? " · " + post.sport : "");
+            const metaRow = document.createElement("div");
+            metaRow.className = "post-author-meta";
+            metaRow.innerHTML = `
+                <span class="badge-role ${post.role || 'player'}">${post.role || 'Player'}</span>
+                <span>•</span>
+                <span class="badge-sport">${post.sport || 'General'}</span>
+                <span>•</span>
+                <span>${new Date(post.createdAt).toLocaleDateString([], { month: 'short', day: 'numeric' })}</span>
+            `;
 
-            authorInfo.appendChild(authorName);
-            authorInfo.appendChild(postMeta);
-            postHeader.appendChild(authorAvatar);
-            postHeader.appendChild(authorInfo);
-            postCard.appendChild(postHeader);
+            info.appendChild(nameRow);
+            info.appendChild(metaRow);
+            authorWrap.appendChild(avatar);
+            authorWrap.appendChild(info);
 
-            if (post.text) {
-                const postText = document.createElement("p");
-                postText.className = "post-card-text";
-                postText.textContent = post.text;
-                postCard.appendChild(postText);
+            header.appendChild(authorWrap);
+
+            // If author is me, show delete
+            if (post.email === sessionEmail) {
+                const delBtn = document.createElement("button");
+                delBtn.className = "btn-outline";
+                delBtn.style.cssText = "padding: 4px 10px; font-size: 11px; border-color: transparent;";
+                delBtn.innerHTML = '<i class="fa-solid fa-trash" style="color: #ef4444;"></i>';
+                delBtn.title = "Delete post";
+                delBtn.onclick = () => {
+                    if (confirm("Delete this post?")) {
+                        let allPosts = JSON.parse(localStorage.getItem("athletiq:posts") || "[]");
+                        allPosts = allPosts.filter(p => p.id !== post.id);
+                        localStorage.setItem("athletiq:posts", JSON.stringify(allPosts));
+                        updateProfileStats();
+                        loadFeed();
+                    }
+                };
+                header.appendChild(delBtn);
             }
 
-            if (post.mediaType) {
-                const mediaSpot = document.createElement("div");
-                mediaSpot.className = "post-card-media";
-                postCard.appendChild(mediaSpot);
+            card.appendChild(header);
 
-                getMedia(post.id).then((blob) => {
+            // Body Text
+            if (post.text) {
+                const pText = document.createElement("p");
+                pText.className = "post-card-text";
+                pText.textContent = post.text;
+                card.appendChild(pText);
+            }
+
+            // Media
+            if (post.mediaType) {
+                const mediaBox = document.createElement("div");
+                mediaBox.className = "post-card-media";
+                card.appendChild(mediaBox);
+
+                getMediaFromDb(post.id).then(blob => {
                     if (blob) {
                         const blobUrl = URL.createObjectURL(blob);
                         activeBlobUrls.push(blobUrl);
@@ -240,27 +433,140 @@ function initHomePage() {
                             const video = document.createElement("video");
                             video.src = blobUrl;
                             video.controls = true;
-                            video.style.maxWidth = "100%";
-                            video.style.borderRadius = "8px";
-                            mediaSpot.appendChild(video);
+                            mediaBox.appendChild(video);
                         } else {
                             const img = document.createElement("img");
                             img.src = blobUrl;
                             img.alt = "Post media";
-                            img.style.maxWidth = "100%";
-                            img.style.borderRadius = "8px";
-                            mediaSpot.appendChild(img);
+                            mediaBox.appendChild(img);
                         }
                     }
                 }).catch(() => {});
             }
 
-            const postFooter = document.createElement("div");
-            postFooter.className = "post-card-footer";
-            postFooter.textContent = new Date(post.createdAt).toLocaleString();
-            postCard.appendChild(postFooter);
+            // Action Bar (Like, Comment, Share)
+            const actionBar = document.createElement("div");
+            actionBar.className = "post-action-bar";
 
-            homeFeed.appendChild(postCard);
+            // Likes
+            const likesCount = post.likes || 0;
+            const isLiked = Array.isArray(post.likedBy) && post.likedBy.includes(sessionEmail);
+
+            const likeBtn = document.createElement("button");
+            likeBtn.className = "action-btn-item" + (isLiked ? " liked" : "");
+            likeBtn.innerHTML = `<i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart"></i> <span>${likesCount}</span>`;
+            likeBtn.onclick = () => {
+                let allPosts = JSON.parse(localStorage.getItem("athletiq:posts") || "[]");
+                const target = allPosts.find(p => p.id === post.id);
+                if (target) {
+                    if (!Array.isArray(target.likedBy)) target.likedBy = [];
+                    const index = target.likedBy.indexOf(sessionEmail);
+                    if (index === -1) {
+                        target.likedBy.push(sessionEmail);
+                        target.likes = (target.likes || 0) + 1;
+                    } else {
+                        target.likedBy.splice(index, 1);
+                        target.likes = Math.max(0, (target.likes || 1) - 1);
+                    }
+                    localStorage.setItem("athletiq:posts", JSON.stringify(allPosts));
+                    loadFeed();
+                }
+            };
+
+            // Comments Toggle
+            const commentsCount = Array.isArray(post.comments) ? post.comments.length : 0;
+            const commentBtn = document.createElement("button");
+            commentBtn.className = "action-btn-item";
+            commentBtn.innerHTML = `<i class="fa-regular fa-comment"></i> <span>${commentsCount}</span>`;
+
+            // Share
+            const shareBtn = document.createElement("button");
+            shareBtn.className = "action-btn-item";
+            shareBtn.innerHTML = `<i class="fa-solid fa-arrow-up-from-bracket"></i> <span>Share</span>`;
+            shareBtn.onclick = () => {
+                navigator.clipboard.writeText(window.location.href);
+                alert("Post link copied to clipboard!");
+            };
+
+            actionBar.appendChild(likeBtn);
+            actionBar.appendChild(commentBtn);
+            actionBar.appendChild(shareBtn);
+            card.appendChild(actionBar);
+
+            // Comments Expandable Section
+            const commentsBox = document.createElement("div");
+            commentsBox.className = "post-comments-box";
+            commentsBox.hidden = true; // Click commentBtn to toggle
+
+            const commentsList = document.createElement("div");
+            commentsList.className = "comments-list";
+
+            function renderCommentsList() {
+                commentsList.innerHTML = "";
+                const currentComments = post.comments || [];
+                currentComments.forEach(c => {
+                    const cRow = document.createElement("div");
+                    cRow.className = "comment-single";
+                    cRow.innerHTML = `
+                        <div class="comment-avatar">${(c.author || 'A').charAt(0).toUpperCase()}</div>
+                        <div>
+                            <div class="comment-author">${c.author}</div>
+                            <div class="comment-text">${c.text}</div>
+                        </div>
+                    `;
+                    commentsList.appendChild(cRow);
+                });
+            }
+            renderCommentsList();
+
+            const commentInputRow = document.createElement("div");
+            commentInputRow.className = "comment-input-row";
+
+            const commentInput = document.createElement("input");
+            commentInput.className = "comment-input-field";
+            commentInput.placeholder = "Write an athletic critique or comment...";
+
+            const commentSubmit = document.createElement("button");
+            commentSubmit.className = "btn-post-comment";
+            commentSubmit.textContent = "Reply";
+            commentSubmit.onclick = () => {
+                const cText = commentInput.value.trim();
+                if (!cText) return;
+
+                let allPosts = JSON.parse(localStorage.getItem("athletiq:posts") || "[]");
+                const target = allPosts.find(p => p.id === post.id);
+                if (target) {
+                    if (!Array.isArray(target.comments)) target.comments = [];
+                    target.comments.push({
+                        author: currentAccount.name,
+                        text: cText,
+                        createdAt: new Date().toISOString()
+                    });
+                    localStorage.setItem("athletiq:posts", JSON.stringify(allPosts));
+                    post.comments = target.comments;
+                    commentInput.value = "";
+                    renderCommentsList();
+                    commentBtn.querySelector("span").textContent = target.comments.length;
+                }
+            };
+
+            commentInput.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") commentSubmit.click();
+            });
+
+            commentInputRow.appendChild(commentInput);
+            commentInputRow.appendChild(commentSubmit);
+
+            commentsBox.appendChild(commentsList);
+            commentsBox.appendChild(commentInputRow);
+            card.appendChild(commentsBox);
+
+            commentBtn.onclick = () => {
+                commentsBox.hidden = !commentsBox.hidden;
+                if (!commentsBox.hidden) commentInput.focus();
+            };
+
+            homeFeed.appendChild(card);
         });
     }
 

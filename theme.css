@@ -1,0 +1,436 @@
+/* ==========================================================================
+   ATHLETIQ - MASTER DESIGN SYSTEM
+   Color Palette: Crimson Red, Jet Black, Clean White
+   ========================================================================== */
+
+:root {
+  /* Brand Red Shades */
+  --green-primary: #e63946;
+  --green-hover: #cc2f3b;
+  --green-glow: rgba(230, 57, 70, 0.28);
+  --green-subtle: rgba(230, 57, 70, 0.1);
+  --green-border: rgba(230, 57, 70, 0.35);
+  --green-dark: #991b1b;
+
+  /* Semantic aliases (use these in new code) */
+  --brand-primary: #e63946;
+  --brand-hover: #cc2f3b;
+  --brand-glow: rgba(230, 57, 70, 0.28);
+  --brand-subtle: rgba(230, 57, 70, 0.1);
+  --brand-border: rgba(230, 57, 70, 0.35);
+  --brand-dark: #991b1b;
+
+  /* Monochromes (Light Mode) */
+  --bg-page: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #ffffff;
+  --border-color: #e2e8f0;
+  --border-hover: #cbd5e1;
+  --text-main: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --input-bg: #ffffff;
+  --hover-pill: #f1f5f9;
+
+  /* Universal Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.08);
+  --shadow-green: 0 4px 18px rgba(230, 57, 70, 0.3);
+  --shadow-brand: 0 4px 18px rgba(230, 57, 70, 0.3);
+
+  /* Geometry & Typography */
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", Helvetica, Arial, sans-serif;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-full: 9999px;
+  --nav-height: 72px;
+}
+
+/* Dark Mode Overrides (Default for High Aesthetic) */
+body.dark-mode,
+:root.dark-theme {
+  --bg-page: #0a0a0a;
+  --bg-surface: #121212;
+  --bg-surface-elevated: #1a1a1a;
+  --border-color: #262626;
+  --border-hover: #3b3b3b;
+  --text-main: #ffffff;
+  --text-secondary: #a3a3a3;
+  --text-muted: #737373;
+  --input-bg: #181818;
+  --hover-pill: #222222;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.7);
+}
+
+/* ==========================================================================
+   GLOBAL RESET & BASE STYLES
+   ========================================================================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  line-height: 1.5;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* ==========================================================================
+   SHARED NAVBAR
+   ========================================================================== */
+.app-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--nav-height);
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-color);
+  z-index: 1000;
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  transition: border-color 0.25s, background-color 0.25s;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text-main);
+}
+
+.nav-brand span {
+  color: var(--brand-primary);
+  text-shadow: 0 0 12px var(--brand-glow);
+}
+
+.nav-brand .brand-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
+  background: var(--brand-subtle);
+  color: var(--brand-primary);
+  border: 1px solid var(--brand-border);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-item {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.nav-item .icon {
+  font-size: 18px;
+  margin-bottom: 3px;
+}
+
+.nav-item:hover {
+  color: var(--text-main);
+  background: var(--hover-pill);
+}
+
+.nav-item.active {
+  color: var(--brand-primary);
+  background: var(--brand-subtle);
+}
+
+.nav-item.active .icon {
+  color: var(--brand-primary);
+}
+
+.nav-badge {
+  position: absolute;
+  top: 4px;
+  right: 12px;
+  background-color: var(--brand-primary);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  box-shadow: 0 2px 8px var(--brand-glow);
+}
+
+.nav-divider {
+  width: 1px;
+  height: 28px;
+  background-color: var(--border-color);
+  margin: 0 6px;
+}
+
+/* ==========================================================================
+   BUTTONS & BADGES
+   ========================================================================== */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: var(--brand-primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 10px 22px;
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-brand);
+}
+
+.btn-primary:hover {
+  background-color: var(--brand-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px var(--brand-glow);
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--text-main);
+  border: 1.5px solid var(--border-color);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 20px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-outline:hover {
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
+  background: var(--brand-subtle);
+}
+
+.btn-dark {
+  background-color: var(--text-main);
+  color: var(--bg-surface);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 10px 20px;
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.btn-dark:hover {
+  opacity: 0.9;
+}
+
+/* Role Badges */
+.badge-role {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  text-transform: capitalize;
+}
+
+.badge-role.player {
+  background: var(--brand-subtle);
+  color: var(--brand-primary);
+  border: 1px solid var(--brand-border);
+}
+
+.badge-role.coach {
+  background: rgba(59, 130, 246, 0.12);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.badge-role.agency {
+  background: rgba(168, 85, 247, 0.12);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+.badge-sport {
+  background: var(--hover-pill);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-color);
+}
+
+/* ==========================================================================
+   CARDS & INPUTS
+   ========================================================================== */
+.card-aesthetic {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.card-aesthetic:hover {
+  border-color: var(--border-hover);
+}
+
+.input-aesthetic {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background-color: var(--input-bg);
+  color: var(--text-main);
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-aesthetic:focus {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px var(--brand-glow);
+}
+
+/* ==========================================================================
+   SHARED FOOTER
+   ========================================================================== */
+.app-footer {
+  margin-top: auto;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 40px 32px 24px 32px;
+  transition: border-color 0.25s, background-color 0.25s;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.footer-brand h3 {
+  color: var(--text-main);
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.footer-brand h3 span {
+  color: var(--brand-primary);
+}
+
+.footer-brand p {
+  font-size: 13px;
+  max-width: 280px;
+  color: var(--text-muted);
+}
+
+.footer-links {
+  display: flex;
+  gap: 48px;
+  flex-wrap: wrap;
+}
+
+.footer-col h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.footer-col a {
+  display: block;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 13px;
+  margin-bottom: 8px;
+  transition: color 0.2s;
+}
+
+.footer-col a:hover {
+  color: var(--brand-primary);
+}
+
+.footer-bottom {
+  max-width: 1200px;
+  margin: 28px auto 0 auto;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   RESPONSIVENESS
+   ========================================================================== */
+@media (max-width: 860px) {
+  .app-nav {
+    padding: 0 16px;
+  }
+  .nav-item span:not(.icon) {
+    display: none;
+  }
+  .nav-links {
+    gap: 4px;
+  }
+}

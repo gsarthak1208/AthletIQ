@@ -24,13 +24,50 @@ if (!localStorage.getItem('athletiq:' + email)) {
 var raw = localStorage.getItem('athletiq:' + email);
 var account = raw ? JSON.parse(raw) : { name: 'Alex Morgan', role: 'player' };
 
+setupNav();
 startPage();
 
 /* ------------------------------------------------------------------
-   2. SAVING PHOTOS AND VIDEOS
-   localStorage is too small for videos (about 5 MB total), so the files
-   go in IndexedDB, a bigger storage built into the browser.
-   The post itself only remembers the file's id.
+   NAV: settings dropdown, dark mode, sign out
+------------------------------------------------------------------- */
+function setupNav() {
+  var settingsBtn = $('settingsBtn');
+  var dropdown = $('settingsDropdown');
+  var darkToggle = $('darkModeToggle');
+  var signOut = $('signOut');
+
+  if (settingsBtn && dropdown) {
+    settingsBtn.onclick = function (e) {
+      e.stopPropagation();
+      dropdown.classList.toggle('active');
+    };
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.settings-container')) dropdown.classList.remove('active');
+    });
+  }
+
+  function setDarkMode(enabled) {
+    document.body.classList.toggle('dark-mode', enabled);
+    localStorage.setItem('darkMode', enabled);
+    if (darkToggle) darkToggle.checked = enabled;
+  }
+  var savedTheme = localStorage.getItem('darkMode');
+  setDarkMode(savedTheme === null ? true : savedTheme === 'true');
+
+  if (darkToggle) darkToggle.onchange = function () { setDarkMode(darkToggle.checked); };
+
+  if (signOut) {
+    signOut.onclick = function () {
+      if (confirm('Sign out of AthletIQ?')) {
+        localStorage.removeItem('athletiq:session');
+        window.location.href = 'signin.html';
+      }
+    };
+  }
+}
+
+/* ------------------------------------------------------------------
+   2. SAVING PHOTOS AND VIDEOS (IndexedDB, same as before)
 ------------------------------------------------------------------- */
 function openDb() {
   return new Promise(function (resolve, reject) {
@@ -87,11 +124,19 @@ function checkFile(file) {
 
 function startPage() {
 
+  // Composer header (avatar + name)
+  if ($('composerAvatar')) $('composerAvatar').textContent = (account.name || 'A').charAt(0).toUpperCase();
+  if ($('composerName')) $('composerName').textContent = account.name || 'Athlete';
+
+  // Character counter
+  function updateCount() { $('charCount').textContent = $('text').value.length; }
+  $('text').addEventListener('input', updateCount);
+  updateCount();
+
   // Temporary links to files shown on the page. We clean them up when the list is redrawn.
   var activeUrls = [];
 
   // 3. LOAD AND SAVE POSTS
-  // All posts are kept in one list under the name "athletiq:posts"
   function loadPosts() {
     var saved = localStorage.getItem('athletiq:posts');
     return saved ? JSON.parse(saved) : [];
@@ -107,7 +152,7 @@ function startPage() {
     var el = document.createElement(type === 'video' ? 'video' : 'img');
     el.src = url;
     if (type === 'video') {
-      el.controls = true;            // play / pause buttons
+      el.controls = true;
       el.preload = 'metadata';
     } else {
       el.alt = 'Photo in post';
@@ -118,29 +163,81 @@ function startPage() {
   // 4. SHOW THE POSTS ON THE PAGE
   function showPosts() {
     var feed = $('feed');
-    feed.innerHTML = '';                      // clear the old list first
+    feed.innerHTML = '';
     activeUrls.forEach(function (u) { URL.revokeObjectURL(u); });
     activeUrls = [];
 
     var posts = loadPosts();
     if (posts.length === 0) {
-      feed.textContent = 'No posts yet. Be the first to post!';
+      feed.innerHTML = '<div class="empty-feed"><i class="fa-solid fa-film"></i>No posts yet. Be the first to post!</div>';
       return;
     }
 
     // newest post first
     posts.slice().reverse().forEach(function (post) {
       var box = document.createElement('div');
-      box.className = 'post';
+      box.className = 'post-card';
 
-      var top = document.createElement('div');
-      top.className = 'post-top';
-      top.textContent = post.author + ' (' + post.role + ')' + (post.sport ? ' · ' + post.sport : '');
-      box.appendChild(top);
+      // Header: avatar, name, role / sport / date, delete button
+      var header = document.createElement('div');
+      header.className = 'post-card-header';
+
+      var authorWrap = document.createElement('div');
+      authorWrap.className = 'post-author-wrap';
+
+      var avatar = document.createElement('div');
+      avatar.className = 'post-avatar';
+      avatar.textContent = (post.author || 'A').charAt(0).toUpperCase();
+
+      var info = document.createElement('div');
+
+      var name = document.createElement('div');
+      name.className = 'post-author-name';
+      name.textContent = post.author;
+
+      var meta = document.createElement('div');
+      meta.className = 'post-author-meta';
+
+      var role = document.createElement('span');
+      role.className = 'badge-role ' + (post.role || 'player');
+      role.textContent = post.role || 'player';
+      meta.appendChild(role);
+
+      if (post.sport) {
+        var sport = document.createElement('span');
+        sport.className = 'badge-sport';
+        sport.textContent = post.sport;
+        meta.appendChild(sport);
+      }
+
+      var time = document.createElement('span');
+      time.className = 'post-time-row';
+      time.textContent = new Date(post.createdAt).toLocaleString();
+      meta.appendChild(time);
+
+      info.appendChild(name);
+      info.appendChild(meta);
+      authorWrap.appendChild(avatar);
+      authorWrap.appendChild(info);
+      header.appendChild(authorWrap);
+
+      // Only the person who wrote the post sees a Delete button
+      if (post.email === email) {
+        var del = document.createElement('button');
+        del.className = 'delete-btn';
+        del.innerHTML = '<i class="fa-solid fa-trash"></i> Delete';
+        del.onclick = async function () {
+          if (post.mediaType) await deleteMedia(post.id);
+          savePosts(loadPosts().filter(function (p) { return p.id !== post.id; }));
+          showPosts();
+        };
+        header.appendChild(del);
+      }
+      box.appendChild(header);
 
       if (post.text) {
         var body = document.createElement('p');
-        body.className = 'post-text';
+        body.className = 'post-card-text';
         body.textContent = post.text;         // textContent is safe: it never runs HTML
         box.appendChild(body);
       }
@@ -152,28 +249,11 @@ function startPage() {
         box.appendChild(spot);
         getMedia(post.id).then(function (blob) {
           if (blob) spot.appendChild(makeMediaElement(blob, post.mediaType));
-          else spot.textContent = '(file not found on this browser)';
+          else { spot.className = 'post-media post-media-note'; spot.textContent = 'File not found on this browser.'; }
         }).catch(function () {
-          spot.textContent = '(could not load file)';
+          spot.className = 'post-media post-media-note';
+          spot.textContent = 'Could not load file.';
         });
-      }
-
-      var time = document.createElement('div');
-      time.className = 'post-time';
-      time.textContent = new Date(post.createdAt).toLocaleString();
-      box.appendChild(time);
-
-      // Only the person who wrote the post sees a Delete button
-      if (post.email === email) {
-        var del = document.createElement('button');
-        del.className = 'delete-btn';
-        del.textContent = 'Delete';
-        del.onclick = async function () {
-          if (post.mediaType) await deleteMedia(post.id);   // remove the file too
-          savePosts(loadPosts().filter(function (p) { return p.id !== post.id; }));
-          showPosts();
-        };
-        box.appendChild(del);
       }
 
       feed.appendChild(box);
@@ -197,7 +277,7 @@ function startPage() {
     var problem = checkFile(file);
     if (problem) {
       $('e-media').textContent = problem;
-      $('media').value = '';                  // forget the bad file
+      $('media').value = '';
       return;
     }
     previewUrl = URL.createObjectURL(file);
@@ -205,7 +285,23 @@ function startPage() {
     var el = document.createElement(type === 'video' ? 'video' : 'img');
     el.src = previewUrl;
     if (type === 'video') el.controls = true;
-    $('preview').appendChild(el);
+
+    var wrap = document.createElement('div');
+    wrap.className = 'preview-wrap';
+    wrap.appendChild(el);
+
+    var remove = document.createElement('button');
+    remove.type = 'button';
+    remove.className = 'btn-remove-media';
+    remove.title = 'Remove';
+    remove.innerHTML = '&times;';
+    remove.onclick = function () {
+      $('media').value = '';
+      clearPreview();
+    };
+    wrap.appendChild(remove);
+
+    $('preview').appendChild(wrap);
   };
 
   // 6. WHEN THE USER CLICKS "POST"
@@ -218,7 +314,6 @@ function startPage() {
     var sport = $('sport').value.trim();
     var file = $('media').files[0];
 
-    // A post needs some text or a photo/video (or both)
     if (text === '' && !file) {
       $('e-text').textContent = 'Write something or add a photo or video.';
       return;
@@ -229,13 +324,14 @@ function startPage() {
     }
 
     var btn = $('post-btn');
+    var btnHtml = '<i class="fa-solid fa-paper-plane"></i> Post';
     btn.disabled = true; btn.textContent = 'Posting…';
 
     try {
-      var id = Date.now();                    // a unique number for this post
+      var id = Date.now();
       var mediaType = '';
       if (file) {
-        await saveMedia(id, file);            // save the file first
+        await saveMedia(id, file);
         mediaType = file.type.indexOf('video/') === 0 ? 'video' : 'image';
       }
 
@@ -255,6 +351,7 @@ function startPage() {
       $('text').value = '';
       $('sport').value = '';
       $('media').value = '';
+      updateCount();
       clearPreview();
       $('post-msg').className = 'msg ok';
       $('post-msg').textContent = 'Your post was added!';
@@ -265,7 +362,7 @@ function startPage() {
       $('post-msg').textContent = 'Could not save the post. The file may be too big for this browser.';
       $('post-msg').hidden = false;
     }
-    btn.disabled = false; btn.textContent = 'Post';
+    btn.disabled = false; btn.innerHTML = btnHtml;
   };
 
   showPosts();   // show existing posts when the page opens

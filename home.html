@@ -1,158 +1,304 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.css"
-    integrity="sha512-Z0kTB03S7BU+JFU0nw9mjSBcRnZm2Bvm0tzOX9/OuOuz01XQfOpa0w/N9u6Jf2f1OAdegdIPWZ9nIZZ+keEvBw=="
-    crossorigin="anonymous" referrerpolicy="no-referrer">
-
-    <link rel="stylesheet" href="home.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AthletIQ – Community Feed</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.css"
+        integrity="sha512-Z0kTB03S7BU+JFU0nw9mjSBcRnZm2Bvm0tzOX9/OuOuz01XQfOpa0w/N9u6Jf2f1OAdegdIPWZ9nIZZ+keEvBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="home.css">
 </head>
+<body class="dark-mode">
 
-<body>
+  <!-- TOP APP NAVIGATION -->
+  <header class="app-nav">
+    <a href="home.html" class="nav-brand">
+      Athlet<span>IQ</span>
+      <span class="brand-badge">Feed</span>
+    </a>
 
-<header>
-    <div class="nav">
-        <div id="logo">AthletIQ</div>
+    <div class="nav-links">
+      <a href="home.html" class="nav-item active">
+        <span class="icon"><i class="fa-solid fa-house"></i></span>
+        <span>Home</span>
+      </a>
 
-        <div class="nav-links-wrap">
-            <a href="home.html" class="nav-link" id="first-link">
-                <span class="icon"><i class="fa-solid fa-house"></i></span>
-                Home
-            </a>
+      <a href="profile.html" class="nav-item">
+        <span class="icon"><i class="fa-solid fa-user"></i></span>
+        <span>Profile</span>
+      </a>
 
-            <a href="profile.html" class="nav-link">
-                <span class="icon"><i class="fa-solid fa-user"></i></span>
-                My Profile
-            </a>
+      <a href="connect.html" class="nav-item">
+        <span class="icon"><i class="fa-solid fa-users"></i></span>
+        <span>Connect</span>
+      </a>
 
-            <a href="connect.html" class="nav-link" id="second-link">
-                <span class="icon"><i class="fa-solid fa-users"></i></span>
-                Connect
-            </a>
+      <a href="post.html" class="nav-item">
+        <span class="icon"><i class="fa-solid fa-circle-plus text-green"></i></span>
+        <span>New Post</span>
+      </a>
 
-            <a href="post.html" class="nav-link" id="third-link">
-                <span class="icon"><i class="fa-solid fa-plus"></i></span>
-                Post
-            </a>
+      <a href="messages.html" class="nav-item">
+        <span class="icon"><i class="fa-solid fa-message"></i></span>
+        <span>Messages</span>
+      </a>
 
-            <a href="messages.html" class="nav-link">
-                <span class="icon"><i class="fa-solid fa-message"></i></span>
-                Messages
-            </a>
+      <a href="notification.html" class="nav-item">
+        <span class="icon"><i class="fa-solid fa-bell"></i></span>
+        <span>Alerts</span>
+        <span id="notif-count" class="nav-badge" hidden>0</span>
+      </a>
 
-            <a href="notification.html" class="nav-link" id="fiveth-link">
-                <span class="icon"><i class="fa-solid fa-bell"></i></span>
-                Notification <span id="notif-count" class="badge" hidden>0</span>
-            </a>
+      <div class="nav-divider"></div>
 
-            <div class="divider"></div>
+      <!-- Settings Dropdown -->
+      <div class="settings-container">
+        <button class="nav-item" id="settingsBtn" style="background:none; border:none; cursor:pointer;">
+          <span class="icon"><i class="fa-solid fa-gear"></i></span>
+          <span>Settings</span>
+        </button>
 
-            <!-- SETTINGS -->
-            <div class="settings-container">
-                <a href="#" class="button" id="settingsBtn">
-                    <span class="icon">
-                        <i class="fa-solid fa-gear"></i>
-                    </span>
-                    Settings
-                </a>
-
-                <!-- SETTINGS DROPDOWN -->
-                <div class="settings-dropdown" id="settingsDropdown">
-                    <div class="dropdown-title">Settings</div>
-                    <div class="dropdown-item">
-                        <span>
-                            <i class="fa-solid fa-moon"></i>
-                            Dark Mode
-                        </span>
-                        <label class="switch">
-                            <input type="checkbox" id="darkModeToggle">
-                            <span class="switch-slider"></span>
-                        </label>
-                    </div>
-                    <hr>
-                    <div class="dropdown-item sign-out" id="signOut">
-                        <span>
-                            <i class="fa-solid fa-right-from-bracket"></i>
-                            Sign Out
-                        </span>
-                    </div>
-                </div>
-            </div>
+        <div class="settings-dropdown" id="settingsDropdown">
+          <div class="dropdown-title">Preferences</div>
+          <div class="dropdown-item">
+            <span><i class="fa-solid fa-moon"></i> Dark Theme</span>
+            <label class="switch">
+              <input type="checkbox" id="darkModeToggle" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+          <hr>
+          <div class="dropdown-item sign-out" id="signOut">
+            <span><i class="fa-solid fa-right-from-bracket"></i> Sign Out</span>
+          </div>
         </div>
+      </div>
     </div>
-</header>
+  </header>
 
-<main class="home-main">
-    <!-- Welcome Profile Card -->
-    <section class="welcome-card">
-        <div class="welcome-left">
-            <div class="user-avatar" id="homeAvatar">A</div>
-            <div class="user-details">
-                <h2 id="homeWelcomeTitle">Welcome to AthletIQ!</h2>
-                <p id="homeWelcomeSub" class="sub-text">Connect with players, coaches, and sports agencies.</p>
+  <!-- MAIN 3-COLUMN SPORTS HUB -->
+  <main class="hub-container">
+    
+    <!-- LEFT COLUMN: USER PROFILE SUMMARY CARD -->
+    <aside class="hub-sidebar-left">
+      <div class="user-summary-card">
+        <div class="user-summary-cover"></div>
+        <div class="user-summary-avatar-wrap">
+          <div class="user-summary-avatar" id="homeAvatar">A</div>
+        </div>
+        <div class="user-summary-body">
+          <h3 id="homeWelcomeTitle">Alex Morgan</h3>
+          <div class="badge-role player" id="homeRoleBadge">Player</div>
+          <p class="user-summary-meta" id="homeWelcomeSub">Football · Los Angeles, USA</p>
+
+          <div class="user-summary-stats">
+            <div class="stat-pill">
+              <strong id="statPosts">0</strong>
+              <span>Posts</span>
             </div>
+            <div class="stat-pill">
+              <strong id="statConnections">0</strong>
+              <span>Network</span>
+            </div>
+          </div>
+
+          <a href="profile.html" class="btn-outline" style="width: 100%; margin-top: 14px; font-size: 13px; padding: 8px;">
+            <i class="fa-solid fa-user-pen"></i> View Full Profile
+          </a>
         </div>
-        <div class="quick-actions">
-            <a href="profile.html" class="action-btn outline"><i class="fa-solid fa-user"></i> My Profile</a>
-            <a href="post.html" class="action-btn"><i class="fa-solid fa-plus"></i> Create Post</a>
-            <a href="connect.html" class="action-btn outline"><i class="fa-solid fa-user-plus"></i> Connect</a>
+      </div>
+
+      <!-- Quick Navigation Shortcuts -->
+      <div class="quick-nav-card">
+        <h4>Sports Directory</h4>
+        <a href="connect.html?role=coach" class="quick-nav-link">
+          <i class="fa-solid fa-clipboard-user text-green"></i> Find Certified Coaches
+        </a>
+        <a href="connect.html?role=agency" class="quick-nav-link">
+          <i class="fa-solid fa-building-user text-green"></i> Scout & Agency Network
+        </a>
+        <a href="messages.html" class="quick-nav-link">
+          <i class="fa-solid fa-comments text-green"></i> Direct Inquiries
+        </a>
+      </div>
+    </aside>
+
+    <!-- CENTER COLUMN: MAIN FEED & INLINE POST CREATOR -->
+    <section class="hub-feed-col">
+      
+      <!-- INLINE POST CREATOR -->
+      <div class="post-creator-card">
+        <div class="creator-top">
+          <div class="creator-avatar" id="creatorAvatar">A</div>
+          <textarea id="quickPostText" rows="2" placeholder="Share a match update, workout highlight, or trial news..."></textarea>
         </div>
+
+        <!-- Preview spot if media selected -->
+        <div id="quickMediaPreview" class="quick-media-preview" hidden>
+          <div id="mediaPreviewContent"></div>
+          <button type="button" id="btnRemoveQuickMedia" class="btn-remove-media">&times;</button>
+        </div>
+
+        <div class="creator-bottom">
+          <div class="creator-tools">
+            <label class="tool-btn" title="Attach Photo or Video">
+              <i class="fa-solid fa-photo-film text-green"></i> Media
+              <input type="file" id="quickPostMedia" accept="image/*,video/*" hidden>
+            </label>
+
+            <select id="quickPostSport" class="tool-select">
+              <option value="Football">⚽ Football</option>
+              <option value="Basketball">🏀 Basketball</option>
+              <option value="Tennis">🎾 Tennis</option>
+              <option value="Athletics">🏃 Track & Field</option>
+              <option value="Cricket">🏏 Cricket</option>
+              <option value="Boxing">🥊 Combat Sports</option>
+              <option value="Swimming">🏊 Swimming</option>
+            </select>
+          </div>
+
+          <button id="btnPublishQuick" class="btn-primary" style="padding: 8px 22px; font-size: 13px;">
+            <i class="fa-solid fa-paper-plane"></i> Post
+          </button>
+        </div>
+      </div>
+
+      <!-- SPORT FILTER BAR -->
+      <div class="filter-pills-bar">
+        <button class="filter-pill active" data-sport="all">🔥 All Sports</button>
+        <button class="filter-pill" data-sport="Football">⚽ Football</button>
+        <button class="filter-pill" data-sport="Basketball">🏀 Basketball</button>
+        <button class="filter-pill" data-sport="Tennis">🎾 Tennis</button>
+        <button class="filter-pill" data-sport="Athletics">🏃 Athletics</button>
+        <button class="filter-pill" data-sport="Cricket">🏏 Cricket</button>
+      </div>
+
+      <!-- FEED LIST -->
+      <div id="homeFeed" class="feed-posts-list">
+        <!-- Rendered dynamically by home.js -->
+      </div>
     </section>
 
-    <!-- Community Feed -->
-    <section class="feed-section">
-        <div class="feed-header">
-            <h3>Community Feed</h3>
-            <a href="post.html" class="feed-create-link">+ New Post</a>
+    <!-- RIGHT COLUMN: SPORTS WIDGETS -->
+    <aside class="hub-sidebar-right">
+      
+      <!-- Upcoming Academy Trials & Combines -->
+      <div class="widget-card">
+        <div class="widget-header">
+          <h4><i class="fa-solid fa-calendar-check text-green"></i> Upcoming Trials</h4>
+          <span class="widget-badge">Verified</span>
         </div>
-        <div id="homeFeed" class="feed-list">
-            <!-- Dynamically populated by home.js -->
+        <div class="trial-item">
+          <div class="trial-date">
+            <strong>24</strong>
+            <span>NOV</span>
+          </div>
+          <div class="trial-info">
+            <h5>FC Academy Showcase 2026</h5>
+            <span class="trial-meta">Football · London, UK · Ages 16-21</span>
+          </div>
         </div>
-    </section>
-</main>
-
-<footer>
-
-    <div class="footer">
-
-        <div class="ft-col">
-
-            <span class="ft-title">Connect With Us</span>
-
-            <a href="#" class="ft-link">Instagram</a>
-            <a href="#" class="ft-link">Facebook</a>
-            <a href="#" class="ft-link">athletiq@gmail.com</a>
-
+        <div class="trial-item">
+          <div class="trial-date">
+            <strong>02</strong>
+            <span>DEC</span>
+          </div>
+          <div class="trial-info">
+            <h5>Elite Pro Basketball Combine</h5>
+            <span class="trial-meta">Basketball · Chicago, USA · Open</span>
+          </div>
         </div>
-
-        <div class="ft-col">
-
-            <span class="ft-title">About Us</span>
-
-            <a href="#" class="ft-link">Click To Know About Us</a>
-
+        <div class="trial-item">
+          <div class="trial-date">
+            <strong>15</strong>
+            <span>DEC</span>
+          </div>
+          <div class="trial-info">
+            <h5>Grand Slam Juniors Trial</h5>
+            <span class="trial-meta">Tennis · Barcelona, ES · U-18</span>
+          </div>
         </div>
+      </div>
 
-        <div class="ft-col" id="gg">
-
-            <span class="ft-title">Help</span>
-
-            <a href="#" class="ft-link">Chat With Us</a>
-
+      <!-- Top Coaches & Scouts -->
+      <div class="widget-card">
+        <div class="widget-header">
+          <h4><i class="fa-solid fa-shield-halved text-green"></i> Top Scouts & Mentors</h4>
         </div>
+        <div class="scout-item">
+          <div class="scout-avatar">C</div>
+          <div class="scout-info">
+            <h5>Coach Davis</h5>
+            <span>Basketball Head Coach · Chicago</span>
+          </div>
+          <a href="messages.html?to=coach.davis@athletiq.com" class="scout-action-btn" title="Direct Message">
+            <i class="fa-solid fa-message"></i>
+          </a>
+        </div>
+        <div class="scout-item">
+          <div class="scout-avatar">M</div>
+          <div class="scout-info">
+            <h5>Marcus Vance</h5>
+            <span>Elite Winger · London North FC</span>
+          </div>
+          <a href="messages.html?to=marcus@athletiq.com" class="scout-action-btn" title="Direct Message">
+            <i class="fa-solid fa-message"></i>
+          </a>
+        </div>
+      </div>
 
+      <!-- Trending Hashtags -->
+      <div class="widget-card">
+        <div class="widget-header">
+          <h4><i class="fa-solid fa-arrow-trend-up text-green"></i> Trending in Sports</h4>
+        </div>
+        <div class="trending-tag">#CollegeScouting2026 <span>4.2k posts</span></div>
+        <div class="trending-tag">#SpeedAndAgilityDrills <span>2.8k posts</span></div>
+        <div class="trending-tag">#NikeYouthCombines <span>1.9k posts</span></div>
+        <div class="trending-tag">#NutritionForAthletes <span>1.1k posts</span></div>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="app-footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>Athlet<span>IQ</span></h3>
+        <p>The premier sports networking ecosystem for athletes, coaches, and scouts.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <a href="home.html">Feed</a>
+          <a href="profile.html">My Profile</a>
+          <a href="connect.html">Scouts Directory</a>
+          <a href="messages.html">Direct Messages</a>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <a href="mailto:athletiq@gmail.com">Help Desk</a>
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+        </div>
+      </div>
     </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 AthletIQ. All rights reserved.</span>
+      <span>Green, Black & White Aesthetic Design</span>
+    </div>
+  </footer>
 
-</footer>
+  <!-- Notification Toast Box -->
+  <div id="toast-box"></div>
 
-<script src="api.js"></script>
-<script src="connection.js"></script>
-<script src="home.js"></script>
-
+  <!-- SCRIPTS -->
+  <script src="api.js"></script>
+  <script src="connection.js"></script>
+  <script src="notification.js"></script>
+  <script src="home.js"></script>
 </body>
 </html>

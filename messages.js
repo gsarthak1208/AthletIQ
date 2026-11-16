@@ -77,6 +77,10 @@
         return history.length > 0 ? history[history.length - 1] : null;
     }
 
+    function timeOf(iso) {
+        return new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    }
+
     // --- Get Potential Contacts ---
     function getAllContacts() {
         const contacts = [];
@@ -122,7 +126,10 @@
         });
 
         if (contacts.length === 0) {
-            convoList.innerHTML = '<div style="padding:20px;color:#888;text-align:center;font-size:13px;">No contacts found. Create another account or search in "Connect" to chat!</div>';
+            const empty = document.createElement("div");
+            empty.className = "list-empty";
+            empty.textContent = 'No contacts found. Create another account or find people in "Connect" to start chatting.';
+            convoList.appendChild(empty);
             return;
         }
 
@@ -147,9 +154,7 @@
             timeEl.className = "convo-time";
 
             const lastMsg = getLastMessage(contact.email);
-            if (lastMsg) {
-                timeEl.textContent = new Date(lastMsg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            }
+            if (lastMsg) timeEl.textContent = timeOf(lastMsg.createdAt);
 
             top.appendChild(nameEl);
             top.appendChild(timeEl);
@@ -157,6 +162,7 @@
             const lastEl = document.createElement("div");
             lastEl.className = "convo-last-msg";
             if (lastMsg) {
+                lastEl.classList.add("has-msg");
                 lastEl.textContent = (lastMsg.from === sessionEmail ? "You: " : "") + lastMsg.text;
             } else {
                 lastEl.textContent = (contact.role ? contact.role : "Member") + (contact.sport ? " · " + contact.sport : "");
@@ -198,7 +204,10 @@
         const history = getConversationHistory(activePartnerEmail);
 
         if (history.length === 0) {
-            chatMessages.innerHTML = '<div style="margin:auto;text-align:center;color:#999;font-size:13px;">No messages yet. Say hello to start the conversation!</div>';
+            const empty = document.createElement("div");
+            empty.className = "messages-empty";
+            empty.textContent = "No messages yet. Say hello to start the conversation!";
+            chatMessages.appendChild(empty);
             return;
         }
 
@@ -213,7 +222,7 @@
 
             const time = document.createElement("div");
             time.className = "msg-time";
-            time.textContent = new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            time.textContent = timeOf(msg.createdAt);
 
             bubbleWrap.appendChild(bubble);
             bubbleWrap.appendChild(time);
@@ -262,6 +271,7 @@
     if (settingsBtn && dropdown) {
         settingsBtn.onclick = function (e) {
             e.preventDefault();
+            e.stopPropagation();
             dropdown.classList.toggle("active");
         };
         document.addEventListener("click", function (e) {
@@ -276,7 +286,9 @@
         localStorage.setItem("darkMode", enabled);
         if (darkToggle) darkToggle.checked = enabled;
     }
-    setDarkMode(localStorage.getItem("darkMode") === "true");
+    // Same default as the other pages: dark unless the user turned it off
+    const savedTheme = localStorage.getItem("darkMode");
+    setDarkMode(savedTheme === null ? true : savedTheme === "true");
 
     if (darkToggle) {
         darkToggle.onchange = function () {

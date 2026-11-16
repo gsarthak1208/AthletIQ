@@ -1,63 +1,151 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AthletIQ – Create account</title>
-  <link rel="stylesheet" href="create_acc.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.css"
+        integrity="sha512-Z0kTB03S7BU+JFU0nw9mjSBcRnZm2Bvm0tzOX9/OuOuz01XQfOpa0w/N9u6Jf2f1OAdegdIPWZ9nIZZ+keEvBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="theme.css?v=3">
+  <link rel="stylesheet" href="create_acc.css?v=3">
 </head>
-<body>
-  <div class="wrap">
-    <h1>Athlet<span>IQ</span></h1>
-    <p class="sub">Create your account or check whether one already exists.</p>
+<body class="dark-mode">
 
-    <div class="tabs" role="tablist">
-      <button role="tab" id="tab-create" aria-selected="true">Create account</button>
-      <button role="tab" id="tab-check" aria-selected="false">Check account</button>
-    </div>
+  <div class="auth-layout">
 
-    <!-- Create account -->
-    <div class="card" id="panel-create">
-      <label for="name">Full name</label>
-      <input id="name" autocomplete="name" placeholder="Alex Morgan">
-      <div class="err" id="e-name"></div>
+    <!-- LEFT BRAND PANEL -->
+    <aside class="brand-panel">
+      <div class="brand-panel-inner">
+        <a href="AthletIQ.html" class="brand-logo">Athlet<span>IQ</span></a>
 
-      <label for="email">Email</label>
-      <input id="email" type="email" autocomplete="email" placeholder="you@example.com">
-      <div class="err" id="e-email"></div>
+        <div class="brand-tagline">
+          <h2>Build your athlete profile.</h2>
+          <p>Join players, coaches and agencies already networking on AthletIQ. It takes a minute.</p>
+        </div>
 
-      <label for="role">I am a…</label>
-      <select id="role">
-        <option value="player">Player</option>
-        <option value="coach">Coach</option>
-        <option value="agency">Sports agency</option>
-      </select>
+        <div class="brand-art" role="img" aria-label="Athletes from different sports in motion"></div>
 
-      <label for="pw">Password</label>
-      <input id="pw" type="password" autocomplete="new-password" placeholder="At least 8 characters">
-      <div class="err" id="e-pw"></div>
+        <div class="brand-stats">
+          <div class="stat-item">
+            <span class="stat-num">12K+</span>
+            <span class="stat-label">Athletes</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-num">3K+</span>
+            <span class="stat-label">Coaches</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-num">500+</span>
+            <span class="stat-label">Agencies</span>
+          </div>
+        </div>
+      </div>
+    </aside>
 
-      <label for="pw2">Confirm password</label>
-      <input id="pw2" type="password" autocomplete="new-password">
-      <div class="err" id="e-pw2"></div>
+    <!-- RIGHT FORM PANEL -->
+    <main class="form-panel">
+      <div class="form-panel-inner">
 
-      <button class="btn" id="create-btn">Create account</button>
-      <div class="msg" id="create-msg" hidden></div>
-      <p class="hint" style="text-align: center; margin-top: 14px;">
-        Already have an account? <a href="signin.html">Sign in here</a>
-      </p>
-    </div>
+        <a href="AthletIQ.html" class="mobile-logo">Athlet<span>IQ</span></a>
 
-    <!-- Check account -->
-    <div class="card" id="panel-check" hidden>
-      <label for="check-email">Email to look up</label>
-      <input id="check-email" type="email" placeholder="you@example.com">
-      <div class="err" id="e-check"></div>
-      <button class="btn" id="check-btn">Check</button>
-      <div class="msg" id="check-msg" hidden></div>
-    </div>
+        <div class="form-card">
+          <div class="form-header">
+            <h1>Join AthletIQ</h1>
+            <p>Create your account or check whether one already exists.</p>
+          </div>
 
-    <p class="hint">Demo mode: accounts are saved in this browser only (localStorage).</p>
+          <div class="tabs" role="tablist">
+            <button type="button" role="tab" id="tab-create" aria-selected="true">Create account</button>
+            <button type="button" role="tab" id="tab-check" aria-selected="false">Check account</button>
+          </div>
+
+          <!-- Create account -->
+          <div class="auth-form" id="panel-create">
+
+            <div class="field-group">
+              <label for="name">Full name</label>
+              <div class="input-wrap">
+                <i class="fa-solid fa-user input-icon"></i>
+                <input id="name" autocomplete="name" placeholder="Alex Morgan">
+              </div>
+              <div class="err" id="e-name"></div>
+            </div>
+
+            <div class="field-group">
+              <label for="email">Email address</label>
+              <div class="input-wrap">
+                <i class="fa-solid fa-envelope input-icon"></i>
+                <input id="email" type="email" autocomplete="email" placeholder="you@example.com">
+              </div>
+              <div class="err" id="e-email"></div>
+            </div>
+
+            <div class="field-group">
+              <label for="role">I am a…</label>
+              <div class="input-wrap">
+                <i class="fa-solid fa-id-badge input-icon"></i>
+                <select id="role">
+                  <option value="player">Player</option>
+                  <option value="coach">Coach</option>
+                  <option value="agency">Sports agency</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label for="pw">Password</label>
+              <div class="input-wrap">
+                <i class="fa-solid fa-lock input-icon"></i>
+                <input id="pw" type="password" autocomplete="new-password" placeholder="At least 8 characters">
+                <button class="toggle-pw" type="button" data-target="pw" aria-label="Show or hide password">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+              <div class="err" id="e-pw"></div>
+            </div>
+
+            <div class="field-group">
+              <label for="pw2">Confirm password</label>
+              <div class="input-wrap">
+                <i class="fa-solid fa-lock input-icon"></i>
+                <input id="pw2" type="password" autocomplete="new-password" placeholder="Repeat your password">
+                <button class="toggle-pw" type="button" data-target="pw2" aria-label="Show or hide password">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+              <div class="err" id="e-pw2"></div>
+            </div>
+
+            <button class="btn-auth" id="create-btn" type="button">Create account</button>
+            <div class="msg" id="create-msg" hidden></div>
+
+            <p class="switch-link">Already have an account? <a href="signin.html">Sign in</a></p>
+          </div>
+
+          <!-- Check account -->
+          <div class="auth-form" id="panel-check" hidden>
+            <div class="field-group">
+              <label for="check-email">Email to look up</label>
+              <div class="input-wrap">
+                <i class="fa-solid fa-magnifying-glass input-icon"></i>
+                <input id="check-email" type="email" placeholder="you@example.com">
+              </div>
+              <div class="err" id="e-check"></div>
+            </div>
+
+            <button class="btn-auth" id="check-btn" type="button">Check</button>
+            <div class="msg" id="check-msg" hidden></div>
+          </div>
+        </div>
+
+        <p class="hint">Demo mode: accounts are also saved in this browser (localStorage).</p>
+
+      </div>
+    </main>
+
   </div>
 
   <script src="api.js"></script>

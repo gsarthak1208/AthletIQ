@@ -1,125 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AthletIQ – Messages</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.css"
-          integrity="sha512-Z0kTB03S7BU+JFU0nw9mjSBcRnZm2Bvm0tzOX9/OuOuz01XQfOpa0w/N9u6Jf2f1OAdegdIPWZ9nIZZ+keEvBw=="
-          crossorigin="anonymous" referrerpolicy="no-referrer">
-    <link rel="stylesheet" href="home.css">
-    <link rel="stylesheet" href="messages.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AthletIQ – Messages</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.css"
+        integrity="sha512-Z0kTB03S7BU+JFU0nw9mjSBcRnZm2Bvm0tzOX9/OuOuz01XQfOpa0w/N9u6Jf2f1OAdegdIPWZ9nIZZ+keEvBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="home.css">
+  <link rel="stylesheet" href="messages.css">
 </head>
-<body>
+<body class="dark-mode">
 
-<header>
-    <div class="nav">
-        <div id="logo"><a href="home.html" style="text-decoration:none; color:inherit;">AthletIQ</a></div>
+  <!-- TOP APP NAVIGATION -->
+  <header class="app-nav">
+    <a href="home.html" class="nav-brand">
+      Athlet<span>IQ</span>
+      <span class="brand-badge">Messages</span>
+    </a>
 
-        <div class="nav-links-wrap">
-            <a href="home.html" class="nav-link">
-                <span class="icon"><i class="fa-solid fa-house"></i></span>
-                Home
-            </a>
+    <div class="nav-links">
+      <a href="home.html" class="nav-item">
+        <span class="icon"><i class="fa-solid fa-house"></i></span>
+        <span>Home</span>
+      </a>
 
-            <a href="profile.html" class="nav-link">
-                <span class="icon"><i class="fa-solid fa-user"></i></span>
-                My Profile
-            </a>
+      <a href="profile.html" class="nav-item">
+        <span class="icon"><i class="fa-solid fa-user"></i></span>
+        <span>Profile</span>
+      </a>
 
-            <a href="connect.html" class="nav-link">
-                <span class="icon"><i class="fa-solid fa-users"></i></span>
-                Connect
-            </a>
+      <a href="connect.html" class="nav-item">
+        <span class="icon"><i class="fa-solid fa-users"></i></span>
+        <span>Connect</span>
+      </a>
 
-            <a href="post.html" class="nav-link">
-                <span class="icon"><i class="fa-solid fa-plus"></i></span>
-                Post
-            </a>
+      <a href="post.html" class="nav-item">
+        <span class="icon"><i class="fa-solid fa-circle-plus"></i></span>
+        <span>New Post</span>
+      </a>
 
-            <a href="messages.html" class="nav-link active">
-                <span class="icon"><i class="fa-solid fa-message"></i></span>
-                Messages
-            </a>
+      <a href="messages.html" class="nav-item active">
+        <span class="icon"><i class="fa-solid fa-message"></i></span>
+        <span>Messages</span>
+      </a>
 
-            <a href="notification.html" class="nav-link">
-                <span class="icon"><i class="fa-solid fa-bell"></i></span>
-                Notification <span id="notif-count" class="badge" hidden>0</span>
-            </a>
+      <a href="notification.html" class="nav-item">
+        <span class="icon"><i class="fa-solid fa-bell"></i></span>
+        <span>Alerts</span>
+        <span id="notif-count" class="nav-badge" hidden>0</span>
+      </a>
 
-            <div class="divider"></div>
+      <div class="nav-divider"></div>
 
-            <div class="settings-container">
-                <a href="#" class="button" id="settingsBtn">
-                    <span class="icon"><i class="fa-solid fa-gear"></i></span>
-                    Settings
-                </a>
-                <div class="settings-dropdown" id="settingsDropdown">
-                    <div class="dropdown-title">Settings</div>
-                    <div class="dropdown-item">
-                        <span><i class="fa-solid fa-moon"></i> Dark Mode</span>
-                        <label class="switch">
-                            <input type="checkbox" id="darkModeToggle">
-                            <span class="switch-slider"></span>
-                        </label>
-                    </div>
-                    <hr>
-                    <div class="dropdown-item sign-out" id="signOut">
-                        <span><i class="fa-solid fa-right-from-bracket"></i> Sign Out</span>
-                    </div>
-                </div>
-            </div>
+      <!-- Settings Dropdown -->
+      <div class="settings-container">
+        <button class="nav-item" id="settingsBtn" style="background:none; border:none; cursor:pointer;">
+          <span class="icon"><i class="fa-solid fa-gear"></i></span>
+          <span>Settings</span>
+        </button>
+
+        <div class="settings-dropdown" id="settingsDropdown">
+          <div class="dropdown-title">Preferences</div>
+          <div class="dropdown-item">
+            <span><i class="fa-solid fa-moon"></i> Dark Theme</span>
+            <label class="switch">
+              <input type="checkbox" id="darkModeToggle" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+          <hr>
+          <div class="dropdown-item sign-out" id="signOut">
+            <span><i class="fa-solid fa-right-from-bracket"></i> Sign Out</span>
+          </div>
         </div>
+      </div>
     </div>
-</header>
+  </header>
 
-<main class="chat-container">
+  <main class="chat-container">
+
     <!-- Left Pane: Conversations List -->
     <aside class="chat-sidebar">
-        <div class="chat-sidebar-header">
-            <h2>Messages</h2>
-            <input type="search" id="chatSearch" placeholder="Search conversations...">
+      <div class="chat-sidebar-header">
+        <h2>Messages</h2>
+        <div class="chat-search-wrap">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="search" id="chatSearch" placeholder="Search conversations…">
         </div>
-        <div class="convo-list" id="convoList">
-            <!-- Dynamic list -->
-        </div>
+      </div>
+      <div class="convo-list" id="convoList">
+        <!-- Rendered by messages.js -->
+      </div>
     </aside>
 
     <!-- Right Pane: Active Chat Room -->
     <section class="chat-room" id="chatRoom">
-        <div class="chat-empty-state" id="chatEmptyState">
-            <i class="fa-solid fa-comments" style="font-size: 48px; color: #ccc; margin-bottom: 12px;"></i>
-            <h3>Your Messages</h3>
-            <p>Select a contact or connected athlete from the list to start a conversation.</p>
+      <div class="chat-empty-state" id="chatEmptyState">
+        <div class="empty-icon"><i class="fa-solid fa-comments"></i></div>
+        <h3>Your messages</h3>
+        <p>Pick a contact from the list to start a conversation.</p>
+      </div>
+
+      <div class="chat-active-panel" id="chatActivePanel" hidden>
+        <div class="chat-header">
+          <div class="chat-header-user">
+            <div class="chat-header-avatar" id="roomAvatar">U</div>
+            <div>
+              <h3 id="roomName">Athlete Name</h3>
+              <span class="chat-header-meta" id="roomRole">Player · Football</span>
+            </div>
+          </div>
         </div>
 
-        <div class="chat-active-panel" id="chatActivePanel" hidden>
-            <div class="chat-header">
-                <div class="chat-header-user">
-                    <div class="chat-header-avatar" id="roomAvatar">U</div>
-                    <div>
-                        <h3 id="roomName">Athlete Name</h3>
-                        <span class="chat-header-meta" id="roomRole">Player · Football</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="chat-messages-area" id="chatMessages">
-                <!-- Bubbles -->
-            </div>
-
-            <form class="chat-input-bar" id="chatForm">
-                <input type="text" id="chatInput" placeholder="Write a message..." autocomplete="off">
-                <button type="submit" id="btnSendMessage" title="Send message">
-                    <i class="fa-solid fa-paper-plane"></i>
-                </button>
-            </form>
+        <div class="chat-messages-area" id="chatMessages">
+          <!-- Bubbles -->
         </div>
+
+        <form class="chat-input-bar" id="chatForm">
+          <input type="text" id="chatInput" placeholder="Write a message…" autocomplete="off">
+          <button type="submit" id="btnSendMessage" title="Send message" aria-label="Send message">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </form>
+      </div>
     </section>
-</main>
+  </main>
 
-<script src="api.js"></script>
-<script src="connection.js"></script>
-<script src="messages.js"></script>
+  <!-- Notification Toast Box -->
+  <div id="toast-box"></div>
+
+  <script src="api.js"></script>
+  <script src="connection.js"></script>
+  <script src="notification.js"></script>
+  <script src="messages.js"></script>
 </body>
 </html>

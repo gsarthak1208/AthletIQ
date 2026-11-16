@@ -5,12 +5,15 @@
   // Normalise an email so "Alex@Mail.com " and "alex@mail.com" are the same account.
   function keyOf(email) { return email.trim().toLowerCase(); }
 
+  /* ---------- Theme: same saved choice as the other pages ---------- */
+  (function applyTheme() {
+    var saved = localStorage.getItem('darkMode');
+    document.body.classList.toggle('dark-mode', saved === null ? true : saved === 'true');
+  })();
+
   /* ------------------------------------------------------------------
      STORAGE LAYER
-     Only these two functions touch storage. For a real backend, replace
-     the bodies with fetch() calls, e.g.:
-       get: fetch('/api/accounts/' + encodeURIComponent(k)).then(...)
-       set: fetch('/api/accounts', { method: 'POST', body: JSON.stringify(...) })
+     Only these two functions touch localStorage.
   ------------------------------------------------------------------- */
   var store = {
     get: async function (k) {
@@ -50,6 +53,18 @@
     el.textContent = text;
     el.hidden = false;
   }
+
+  /* ---------- show / hide password (eye buttons) ---------- */
+  document.querySelectorAll('.toggle-pw').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var input = $(btn.getAttribute('data-target'));
+      if (!input) return;
+      var show = input.type === 'password';
+      input.type = show ? 'text' : 'password';
+      var icon = btn.querySelector('i');
+      if (icon) icon.className = show ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye';
+    });
+  });
 
   /* ---------- create account ---------- */
   $('create-btn').onclick = async function () {
